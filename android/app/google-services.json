@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "199377058238",
+    "firebase_url": "https://restaurance-2020.firebaseio.com",
+    "project_id": "restaurance-2020",
+    "storage_bucket": "restaurance-2020.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:199377058238:android:97d7a1db03fc90f16721ef",
+        "android_client_info": {
+          "package_name": "com.example.restaurance"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "199377058238-mskicifuvlg0d1tl2p85uashk5serjgm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ3QQCxdr8o3mt56JnTGN9JVxXpb65Elo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "199377058238-mskicifuvlg0d1tl2p85uashk5serjgm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
