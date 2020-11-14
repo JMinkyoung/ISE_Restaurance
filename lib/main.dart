@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'file:///C:/Users/KyewonPark/AndroidStudioProjects/restaurance/lib/login_service/authentication_service.dart';
-import 'file:///C:/Users/KyewonPark/AndroidStudioProjects/restaurance/lib/login_service/authentication_wrapper.dart';
+import 'package:restaurance/login_service/authentication_service.dart';
+import 'package:restaurance/login_service/authentication_wrapper.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +21,8 @@ class MyApp extends StatelessWidget {
           create: (_) => AuthenticationService(FirebaseAuth.instance),
         ),
         StreamProvider(
-          create: (context) => context.read<AuthenticationService>().authStateChanges,
+          create: (context) =>
+              context.read<AuthenticationService>().authStateChanges,
         )
       ],
       child: MaterialApp(
@@ -35,4 +36,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
