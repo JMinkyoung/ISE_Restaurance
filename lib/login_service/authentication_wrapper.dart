@@ -8,33 +8,33 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class AuthenticationWrapper extends StatelessWidget {
-  static CollectionReference userCollection = FirebaseFirestore.instance.collection('users');
+  static CollectionReference userCollection =
+      FirebaseFirestore.instance.collection('users');
 
   @override
   Widget build(BuildContext context) {
     final firebaseUser = context.watch<User>();
     if (firebaseUser != null) {
       return StreamBuilder<DocumentSnapshot>(
-              stream: userCollection.doc(firebaseUser.uid).snapshots(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<DocumentSnapshot> snapshot) {
-                if (snapshot.hasData && snapshot.data != null) {
-                  final userdata = snapshot.data.data();
-                  if (userdata['role'] == 'Manager') {
-                    return ManagerHome();
-                  } else {
-                    return StaffHomePage(); //staffpage
-                  }
-                } else {
-                  return Material(
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  );
-                }
-              },
+        stream: userCollection.doc(firebaseUser.uid).snapshots(),
+        builder:
+            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          if (snapshot.hasData && snapshot.data != null) {
+            final userdata = snapshot.data.data();
+            if (userdata['role'] == 'Manager') {
+              return ManagerHome();
+            } else {
+              return StaffHomePage(); //staffpage
+            }
+          } else {
+            return Material(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
             );
-
+          }
+        },
+      );
     }
     return SignInPage();
   }
