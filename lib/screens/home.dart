@@ -4,16 +4,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'view.dart';
 import 'edit.dart';
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class checkTime extends StatefulWidget {
+  checkTime({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _checkTimeState createState() => _checkTimeState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _checkTimeState extends State<checkTime> {
   final db = FirebaseFirestore.instance;
   String ident;
 
@@ -157,7 +157,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
 
       appBar: AppBar(
-        title: Text(widget.title, style: TextStyle(fontSize: 40)),
+        
       ),
 
       floatingActionButton: FloatingActionButton.extended(

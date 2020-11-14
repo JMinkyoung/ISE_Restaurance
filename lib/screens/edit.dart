@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
-import 'package:memo/screens/home.dart';
+import 'package:restaurance/screens/home.dart';
 import 'dart:convert';
 import 'memo.dart';
 
