@@ -15,6 +15,10 @@ class MenuManageState extends State<MenuManage> {
   String menuPrice;
   String menuType;
   String dbid;
+  // textFormField 지우는 컨트롤러
+  final TextEditingController _clearController = new TextEditingController();
+  final TextEditingController _clearController2 = new TextEditingController();
+  final TextEditingController _clearController3 = new TextEditingController();
 
   Card buildItem(DocumentSnapshot doc) {
     final menudata = doc.data();
@@ -102,92 +106,101 @@ class MenuManageState extends State<MenuManage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Restaurance",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35)),
-        bottom: PreferredSize(
-          child: Text(
-            "메뉴관리",
-            style: TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
-          ),
-          preferredSize: null,
-        ),
-        backgroundColor: Colors.deepPurple,
-        leading: Image.asset(
-          'image/tray.png',
-          height: 200,
-        ),
-      ),
-      body: ListView(
-        padding: EdgeInsets.all(8),
-        children: <Widget>[
-          Form(
-            key: _formKey,
-            //buildTextFormField()
-            child: new Column(
-              children: <Widget>[
-                new TextFormField(
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: '메뉴1',
-                    fillColor: Colors.grey[300],
-                    labelText: '메뉴이름',
-                  ),
-                  // ignore: missing_return
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                  },
-                  onSaved: (value) => menuName = value,
-                ),
-                new TextFormField(
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: '13000원',
-                    fillColor: Colors.grey[300],
-                    labelText: '가격',
-                  ),
-                  // ignore: missing_return
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                  },
-                  onSaved: (value) => menuPrice = value,
-                ),
-                new TextFormField(
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: '양식',
-                    fillColor: Colors.grey[300],
-                    labelText: '카테고리',
-                  ),
-                  // ignore: missing_return
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                  },
-                  onSaved: (value) => menuType = value,
-                ),
-              ],
+        appBar: AppBar(
+          title: Text("Restaurance",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35)),
+          bottom: PreferredSize(
+            child: Text(
+              "메뉴관리",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20),
             ),
+            preferredSize: null,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          backgroundColor: Colors.deepPurple,
+          leading: Image.asset(
+            'image/tray.png',
+            height: 200,
+          ),
+        ),
+        body: GestureDetector(
+          onTap: () { //화면 다른부분 누르면 올라와있던 키보드 사라짐
+            FocusScope.of(context).requestFocus(new FocusNode());
+          },
+          child: ListView(
+            padding: EdgeInsets.all(8),
             children: <Widget>[
-              RaisedButton(
-                onPressed: addMenu,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                color: Colors.deepPurple,
-                child: Text("메뉴추가",
-                    style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold)),
+              Form(
+                key: _formKey,
+                //buildTextFormField()
+                child: new Column(
+                  children: <Widget>[
+                    new TextFormField(
+                      controller: _clearController,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: '메뉴1',
+                        fillColor: Colors.grey[300],
+                        labelText: '메뉴이름',
+                      ),
+                      // ignore: missing_return
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                      },
+                      onSaved: (value) => menuName = value,
+                    ),
+                    new TextFormField(
+                      controller: _clearController2,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: '13000원',
+                        fillColor: Colors.grey[300],
+                        labelText: '가격',
+                      ),
+                      // ignore: missing_return
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                      },
+                      onSaved: (value) => menuPrice = value,
+                    ),
+                    new TextFormField(
+                      controller: _clearController3,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: '양식',
+                        fillColor: Colors.grey[300],
+                        labelText: '카테고리',
+                      ),
+                      // ignore: missing_return
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                      },
+                      onSaved: (value) => menuType = value,
+                    ),
+                  ],
+                ),
               ),
-              /*RaisedButton(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  RaisedButton(
+                    onPressed: addMenu,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    color: Colors.deepPurple,
+                    child: Text("메뉴추가",
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold)),
+                  ),
+                  /*RaisedButton(
                 onPressed: dbid != null ? readMenu : null,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
@@ -196,25 +209,25 @@ class MenuManageState extends State<MenuManage> {
                     style: TextStyle(
                         color: Colors.white, fontWeight: FontWeight.bold)),
               ),*/
+                ],
+              ),
+              StreamBuilder<QuerySnapshot>(
+                stream: db.collection("Menu").snapshots(),
+                // ignore: missing_return
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Column(
+                        children: snapshot.data.docs
+                            .map((doc) => buildItem(doc))
+                            .toList());
+                  } else {
+                    return SizedBox();
+                  }
+                },
+              )
             ],
           ),
-          StreamBuilder<QuerySnapshot>(
-            stream: db.collection("Menu").snapshots(),
-            // ignore: missing_return
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Column(
-                    children: snapshot.data.docs
-                        .map((doc) => buildItem(doc))
-                        .toList());
-              } else {
-                return SizedBox();
-              }
-            },
-          )
-        ],
-      ),
-    );
+        ));
   }
 
   void addMenu() async {
@@ -228,6 +241,12 @@ class MenuManageState extends State<MenuManage> {
       setState(() => dbid = ref.id);
       print(ref.id);
     }
+    //남아있는 텍스트필드 지움
+    _clearController.clear();
+    _clearController2.clear();
+    _clearController3.clear();
+    //create시 올라와있던 키보드 사라짐
+    FocusScope.of(context).requestFocus(new FocusNode());
   }
 
   void readMenu() async {
