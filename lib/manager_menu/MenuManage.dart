@@ -11,6 +11,7 @@ class MenuManage extends StatefulWidget {
 class MenuManageState extends State<MenuManage> {
   final db = FirebaseFirestore.instance;
   final _formKey = GlobalKey<FormState>();
+  final editformkey = GlobalKey<FormState>();
   String menuName;
   String menuPrice;
   String menuType;
@@ -60,11 +61,19 @@ class MenuManageState extends State<MenuManage> {
               children: <Widget>[
                 SizedBox(width: 8),
                 FlatButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  color: Colors.deepPurple,
+                  child: Text('메뉴수정', style: TextStyle(color: Colors.white)),
+                  onPressed: () => menuEditingDisplay(context),
+                ),
+                FlatButton(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
                     color: Colors.deepPurple,
                     child: Text('메뉴삭제', style: TextStyle(color: Colors.white)),
                     onPressed: () {
+                      //메뉴 삭제시 삭제여부 확인 팝업창
                       showDialog(
                           context: context,
                           barrierDismissible: false,
@@ -126,7 +135,8 @@ class MenuManageState extends State<MenuManage> {
           ),
         ),
         body: GestureDetector(
-          onTap: () { //화면 다른부분 누르면 올라와있던 키보드 사라짐
+          onTap: () {
+            //화면 다른부분 누르면 올라와있던 키보드 사라짐
             FocusScope.of(context).requestFocus(new FocusNode());
           },
           child: ListView(
@@ -200,15 +210,6 @@ class MenuManageState extends State<MenuManage> {
                         style: TextStyle(
                             color: Colors.white, fontWeight: FontWeight.bold)),
                   ),
-                  /*RaisedButton(
-                onPressed: dbid != null ? readMenu : null,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                color: Colors.deepPurple,
-                child: Text("메뉴읽기",
-                    style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold)),
-              ),*/
                 ],
               ),
               StreamBuilder<QuerySnapshot>(
@@ -255,10 +256,103 @@ class MenuManageState extends State<MenuManage> {
     print(snapshot['MenuPrice']);
   }
 
-  void uppdateMenu(DocumentSnapshot doc) async {}
+  void uppdateMenu(DocumentSnapshot doc) async {
+    if (editformkey.currentState.validate()) {
+      editformkey.currentState.save();
+      db.collection("Menu").doc(doc.id).update({
+        'MenuName': '$menuName',
+        'MenuPrice': '$menuPrice',
+        'MenuType': '$menuType',
+      });
+    }
+    //남아있는 텍스트필드 지움
+    _clearController.clear();
+    _clearController2.clear();
+    _clearController3.clear();
+    //create시 올라와있던 키보드 사라짐
+    FocusScope.of(context).requestFocus(new FocusNode());
+  }
 
   void deleteMenu(DocumentSnapshot doc) async {
     await db.collection("Menu").doc(doc.id).delete();
     setState(() => dbid = null);
+  }
+
+  //메뉴 수정을 위해 팝업창에 TextField 생성하는 부분 (아직미완)
+  menuEditingDisplay(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            key: editformkey,
+            title: Text('메뉴수정'),
+            content: SingleChildScrollView(
+              child: new Column(
+                children: <Widget>[
+                  new TextFormField(
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: '메뉴1',
+                      fillColor: Colors.grey[300],
+                      labelText: '메뉴이름',
+                    ),
+                    // ignore: missing_return
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                    },
+                    onSaved: (value) => menuName = value,
+                  ),
+                  new TextFormField(
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: '13000원',
+                      fillColor: Colors.grey[300],
+                      labelText: '가격',
+                    ),
+                    // ignore: missing_return
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                    },
+                    onSaved: (value) => menuPrice = value,
+                  ),
+                  new TextFormField(
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: '양식',
+                      fillColor: Colors.grey[300],
+                      labelText: '카테고리',
+                    ),
+                    // ignore: missing_return
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                    },
+                    onSaved: (value) => menuType = value,
+                  ),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              new FlatButton(
+                child: new Text('확인'),
+                onPressed: () {
+                  //uppdateMenu(doc),
+                  Navigator.of(context).pop();
+                },
+              ),
+              new FlatButton(
+                child: new Text('취소'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
   }
 }

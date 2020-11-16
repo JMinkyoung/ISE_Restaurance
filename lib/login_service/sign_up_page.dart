@@ -25,10 +25,13 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   //'user'컬렉션 지정
-  final CollectionReference userCollection = FirebaseFirestore.instance.collection('users');
+  final CollectionReference userCollection =
+      FirebaseFirestore.instance.collection('users');
   //유저 생성 후 name과 role까지 지정
-  signupWithEmail({String email, String password, String name, String role}) async {
-    final result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+  signupWithEmail(
+      {String email, String password, String name, String role}) async {
+    final result = await _auth.createUserWithEmailAndPassword(
+        email: email, password: password);
     final User user = result.user;
     await userCollection.doc(user.uid).set({
       'email': email,
@@ -81,42 +84,41 @@ class _SignupPageState extends State<SignupPage> {
                 decoration: InputDecoration(hintText: "Confirm password"),
               ),
               const SizedBox(height: 10.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Radio(
-                  value: 1,
-                  groupValue: id,
-                  onChanged: (val) {
-                    setState(() {
-                      radioButtonItem = 'Staff';
-                      id = 1;
-                    });
-                  },
-                ),
-                Text(
-                  'Staff',
-                  style: new TextStyle(fontSize: 17.0),
-                ),
-
-                Radio(
-                  value: 2,
-                  groupValue: id,
-                  onChanged: (val) {
-                    setState(() {
-                      radioButtonItem = 'Manager';
-                      id = 2;
-                    });
-                  },
-                ),
-                Text(
-                  'Manager',
-                  style: new TextStyle(
-                    fontSize: 17.0,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Radio(
+                    value: 1,
+                    groupValue: id,
+                    onChanged: (val) {
+                      setState(() {
+                        radioButtonItem = 'Staff';
+                        id = 1;
+                      });
+                    },
                   ),
-                ),
-              ],
-            ),
+                  Text(
+                    'Staff',
+                    style: new TextStyle(fontSize: 17.0),
+                  ),
+                  Radio(
+                    value: 2,
+                    groupValue: id,
+                    onChanged: (val) {
+                      setState(() {
+                        radioButtonItem = 'Manager';
+                        id = 2;
+                      });
+                    },
+                  ),
+                  Text(
+                    'Manager',
+                    style: new TextStyle(
+                      fontSize: 17.0,
+                    ),
+                  ),
+                ],
+              ),
               RaisedButton(
                 child: Text("계정 생성"),
                 onPressed: () async {
@@ -133,10 +135,10 @@ class _SignupPageState extends State<SignupPage> {
                   }
                   try {
                     final user = await signupWithEmail(
-                        email: _emailController.text,
-                        password: _passwordController.text,
-                        name: _nameController.text,
-                        role: radioButtonItem,
+                      email: _emailController.text,
+                      password: _passwordController.text,
+                      name: _nameController.text,
+                      role: radioButtonItem,
                     );
                     if (user != null) {
                       print("signup successful");
