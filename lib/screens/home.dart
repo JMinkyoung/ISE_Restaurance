@@ -4,16 +4,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'view.dart';
 import 'edit.dart';
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class checkTime extends StatefulWidget {
+  checkTime({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _checkTimeState createState() => _checkTimeState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _checkTimeState extends State<checkTime> {
   final db = FirebaseFirestore.instance;
   String ident;
 
@@ -54,7 +54,23 @@ class _MyHomePageState extends State<MyHomePage> {
                           color: Colors.black),
                       textAlign: TextAlign.right),
                   Padding(padding: EdgeInsets.all(0.0)),
-                 ],
+                  SizedBox(
+                      height: 35,
+                      child: RaisedButton(
+                        child: Text('상세보기',
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 20)),
+                        color: Colors.deepPurple,
+                        onPressed: () {
+                          ident = '${id['id']}';
+                          Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                  builder: (context) => ViewPage(id: ident)));
+                        },
+                        //goto Details.dart
+                      )),
+                ],
               ),
             ])));
   }
@@ -94,6 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       color: Colors.black),
                   textAlign: TextAlign.right),
               Padding(padding: EdgeInsets.all(0.0)),
+              SizedBox(),
             ])
           ]),
           StreamBuilder<QuerySnapshot>(
@@ -133,13 +150,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       color: Colors.black),
                   textAlign: TextAlign.right),
               Padding(padding: EdgeInsets.all(0.0)),
+              SizedBox(),
             ])
           ]),
         ],
       ),
 
       appBar: AppBar(
-        title: Text(widget.title, style: TextStyle(fontSize: 40)),
+        
       ),
 
       floatingActionButton: FloatingActionButton.extended(
