@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:restaurance/customAppBar.dart';
 
 /// 직원관리 페이지
 /// 직원 목록 불러와 카드 형태로 출력하고, 생성 및 삭제를 진행할 수 있다.
@@ -84,9 +85,10 @@ class StaffManageState extends State<StaffManage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('직원관리'),
-        ),
+//        appBar: AppBar(
+//          //title: Text('직원관리'),
+//        ),
+        appBar: customAppBar_Manag(context),
         body: GestureDetector( //화면 다른부분 누르면 올라와있던 키보드 사라짐
           onTap: () {
             FocusScope.of(context).requestFocus(new FocusNode());
