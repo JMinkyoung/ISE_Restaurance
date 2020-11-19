@@ -22,9 +22,12 @@ class _checkTimeState extends State<checkTime> {
   int avgPrepTime = 0;
   int Count = 0;
 
+
+
   @override
   Card buildItem(DocumentSnapshot doc) {
     final id = doc.data();
+    //관련 데이터 베이스 밀어야 오류 안남 원래 String으로 데이터 저장했는데 int로 저장되도록 바꿔서 생기는 오류
     temp1 = id['createTime'];
     temp2 = id['prepTime'];
     avgCreateTime += temp1;

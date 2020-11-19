@@ -6,39 +6,40 @@ class ViewPage extends StatelessWidget {
   ViewPage({Key key, this.id}) : super(key: key);
 
   final String id;
+  int countMenu = 0;
+  String menuTemp;
+
 
   @override
-  //나중에 수정할 예정 넣을 내용이 없음
+  //Order record에서 데이터를 가져와서 메뉴이름에 따라 +1
   Widget ViewItem(DocumentSnapshot doc) {
+    menuTemp = doc['MenuName'];
+    FirebaseFirestore.instance
+        .collection('OrderList')
+        .where("MenuName", isEqualTo: menuTemp)
+        .get()
+        .then((QuerySnapshot ds) {
+      ds.docs.forEach((doc) => getCount());
+    });
     final vid = doc.data();
     return Container(
-      child: Column(
+      child: Table(
         children: [
-          Text('입장시간: ${vid['enterTime']}\n',
-              style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black),
-              textAlign: TextAlign.left),
-          Text('예상금액${vid['price']}￦\n',
-              style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black),
-              textAlign: TextAlign.left),
-          Text('소요시간${vid['createTime']}분\n',
-              style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black),
-              textAlign: TextAlign.left),
-          Text('준비시간${vid['prepTime']}분\n',
-              style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black),
-              textAlign: TextAlign.left),
-          Padding(padding: EdgeInsets.all(0.0)),
+          TableRow(children: [
+            Text('메뉴이름: ${vid['MenuName']}\n',
+                style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black),
+                textAlign: TextAlign.left),
+            Padding(padding: EdgeInsets.all(0.0)),
+            Text(countMenu.toString(),
+                style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black),
+                textAlign: TextAlign.left),
+          ])
         ],
       ),
     );
@@ -46,21 +47,18 @@ class ViewPage extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('상세보기'), actions: <Widget>[
-          /*  IconButton(
-            icon: const Icon(Icons.delete),
-            onPressed: () {},
-          ),*/
-        ]),
+        appBar: AppBar(
+          title: Text('판매 분석'),
+        ),
         body: Padding(
           padding: EdgeInsets.all(20),
           child: Column(
             children: <Widget>[
               StreamBuilder<QuerySnapshot>(
                   stream: FirebaseFirestore.instance
-                      .collection('Order')
-                      .where('id', isEqualTo: id)
-                      .snapshots() //search id로 관련 db찾기
+                      .collection('Menu')
+                  //.where('MenuName', isEqualTo: id)
+                      .snapshots() //OrderRecord값을 모조리 불러옴
                   ,
                   // ignore: missing_return
                   builder: (context, snapshot) {
@@ -76,5 +74,10 @@ class ViewPage extends StatelessWidget {
             ],
           ),
         ));
+  }
+
+  getCount() {
+    countMenu+=1;
+    print(countMenu);
   }
 }
