@@ -1,9 +1,9 @@
 class Memo {
   final String id;
   final String enterTime;
-  final String price;
-  final String createTime;
-  final String prepTime;
+  final int price;
+  final int createTime;
+  final int prepTime;
 
   Memo({this.id, this.enterTime, this.price, this.createTime, this.prepTime});
 

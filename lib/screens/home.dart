@@ -16,10 +16,20 @@ class checkTime extends StatefulWidget {
 class _checkTimeState extends State<checkTime> {
   final db = FirebaseFirestore.instance;
   String ident;
+  int temp1 = 0;
+  int temp2 = 0;
+  int avgCreateTime = 0;
+  int avgPrepTime = 0;
+  int Count = 0;
 
   @override
   Card buildItem(DocumentSnapshot doc) {
     final id = doc.data();
+    temp1 = id['createTime'];
+    temp2 = id['prepTime'];
+    avgCreateTime += temp1;
+    avgPrepTime += temp2;
+    Count += 1;
     return Card(
         color: Colors.white,
         child: Padding(
@@ -54,22 +64,6 @@ class _checkTimeState extends State<checkTime> {
                           color: Colors.black),
                       textAlign: TextAlign.right),
                   Padding(padding: EdgeInsets.all(0.0)),
-                  SizedBox(
-                      height: 35,
-                      child: RaisedButton(
-                        child: Text('상세보기',
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 20)),
-                        color: Colors.deepPurple,
-                        onPressed: () {
-                          ident = '${id['id']}';
-                          Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                  builder: (context) => ViewPage(id: ident)));
-                        },
-                        //goto Details.dart
-                      )),
                 ],
               ),
             ])));
@@ -110,7 +104,6 @@ class _checkTimeState extends State<checkTime> {
                       color: Colors.black),
                   textAlign: TextAlign.right),
               Padding(padding: EdgeInsets.all(0.0)),
-              SizedBox(),
             ])
           ]),
           StreamBuilder<QuerySnapshot>(
@@ -137,27 +130,25 @@ class _checkTimeState extends State<checkTime> {
                 ),
               ),
               Text(''),
-              Text('구현x',
+              Text((avgCreateTime/Count).toStringAsFixed(0)+'분',
                   style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: Colors.black),
                   textAlign: TextAlign.right),
-              Text('구현x',
+              Text((avgPrepTime/Count).toStringAsFixed(0)+'분',
                   style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: Colors.black),
                   textAlign: TextAlign.right),
               Padding(padding: EdgeInsets.all(0.0)),
-              SizedBox(),
             ])
           ]),
         ],
       ),
 
       appBar: AppBar(
-        
       ),
 
       floatingActionButton: FloatingActionButton.extended(

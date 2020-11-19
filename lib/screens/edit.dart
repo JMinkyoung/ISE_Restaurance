@@ -16,9 +16,9 @@ class _EditPageState extends State<EditPage> {
   String id;
   final db = FirebaseFirestore.instance;
 
-  String price = '';
-  String createTime = '';
-  String prepTime = '';
+  int price;
+  int createTime;
+  int prepTime;
 
   @override
   //값 입력 텍스트필드
@@ -40,7 +40,7 @@ class _EditPageState extends State<EditPage> {
             children: <Widget>[
               TextField(
                 onChanged: (String price) {
-                  this.price = price;
+                  this.price = int.parse(price);
                 },
                 style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
                 keyboardType: TextInputType.multiline,
@@ -54,7 +54,7 @@ class _EditPageState extends State<EditPage> {
               Padding(padding: EdgeInsets.all(10)),
               TextField(
                 onChanged: (String createTime) {
-                  this.createTime = createTime;
+                  this.createTime = int.parse(createTime);
                 },
                 style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
                 keyboardType: TextInputType.multiline,
@@ -67,7 +67,7 @@ class _EditPageState extends State<EditPage> {
               Padding(padding: EdgeInsets.all(10)),
               TextField(
                 onChanged: (String prepTime) {
-                  this.prepTime = prepTime;
+                  this.prepTime = int.parse(prepTime);
                 },
                 style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
                 keyboardType: TextInputType.multiline,
