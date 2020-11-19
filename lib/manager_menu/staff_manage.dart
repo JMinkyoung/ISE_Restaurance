@@ -18,7 +18,10 @@ class StaffManageState extends State<StaffManage> {
   String id;
   final db = FirebaseFirestore.instance;
   final _formKey = GlobalKey<FormState>();
+  final _updateKey = GlobalKey<FormState>();
+
   String name, email;
+  String name_up, email_up;
   // textFormField 지우는 컨트롤러
   final TextEditingController _clearController = new TextEditingController();
   final TextEditingController _clearController2 = new TextEditingController();
@@ -50,9 +53,13 @@ class StaffManageState extends State<StaffManage> {
               //오른쪽 밑에 누르면 직원 데이터를 삭제하는 버튼을 만든다.
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
+                FlatButton(
+                  onPressed: () => showUpdateData(doc),
+                  child: Text('Update'),
+                ),
                 SizedBox(width: 8),
                 FlatButton(
-                  onPressed: () => showDeleteAlertDialog(context, doc),
+                  onPressed: () => showDeleteAlertDialog(doc),
                   child: Text('Delete'),
                 ),
               ],
@@ -89,7 +96,8 @@ class StaffManageState extends State<StaffManage> {
 //          //title: Text('직원관리'),
 //        ),
         appBar: customAppBar_Manag(context),
-        body: GestureDetector( //화면 다른부분 누르면 올라와있던 키보드 사라짐
+        body: GestureDetector(
+          //화면 다른부분 누르면 올라와있던 키보드 사라짐
           onTap: () {
             FocusScope.of(context).requestFocus(new FocusNode());
           },
@@ -135,8 +143,9 @@ class StaffManageState extends State<StaffManage> {
                   )),
               RaisedButton(
                 onPressed: () => {
-                  showCreateAlertDialog(context),
-                  FocusScope.of(context).requestFocus(new FocusNode()) //create시 올라와있던 키보드 사라짐
+                  showCreateAlertDialog(),
+                  FocusScope.of(context)
+                      .requestFocus(new FocusNode()) //create시 올라와있던 키보드 사라짐
                 }, //store Data,
                 child: Text('Create', style: TextStyle(color: Colors.white)),
                 color: Colors.green,
@@ -186,9 +195,81 @@ class StaffManageState extends State<StaffManage> {
     setState(() => id = null);
   }
 
+  void updateData(doc) async {
+    if (_updateKey.currentState.validate()) {
+      _updateKey.currentState.save();
+      db.collection("users").doc(doc.id).update({
+        'email': '$email_up',
+        'name': '$name_up',
+      });
+    }
+  }
+
+  Future<void> showUpdateData(doc) async {
+    await showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SingleChildScrollView(
+            child: Form(
+                key: _updateKey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "email",
+                        fillColor: Colors.grey[300],
+                        filled: true,
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter some text';
+                        } else return'';
+                      },
+                      onSaved: (value) => email_up = value,
+                    ),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "name",
+                        fillColor: Colors.grey[300],
+                        filled: true,
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter some text';
+                        }else return'';
+                      },
+                      onSaved: (value) => name_up = value,
+                    ),
+                  ],
+                )),
+          ),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text('확인'),
+              onPressed: () => {
+                updateData(doc),
+                Navigator.of(context).pop(),
+              },
+            ),
+            new FlatButton(
+              child: new Text('취소'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
   //delete하기 전 정말 지울건지 물어보는 팝업 창.
-  void showDeleteAlertDialog(BuildContext context, doc) async {
-    String result = await showDialog(
+  void showDeleteAlertDialog(doc) async {
+    await showDialog(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
@@ -196,15 +277,15 @@ class StaffManageState extends State<StaffManage> {
           title: Text("Delete?"),
           actions: [
             FlatButton(
-              child: Text("No"),
-              onPressed: () => Navigator.pop(context),
-            ),
-            FlatButton(
-                child: Text("Yes"),
+                child: Text("확인"),
                 onPressed: () => {
                       deleteData(doc),
                       Navigator.pop(context),
                     }),
+            FlatButton(
+              child: Text("취소"),
+              onPressed: () => Navigator.pop(context),
+            ),
           ],
         );
       },
@@ -212,8 +293,8 @@ class StaffManageState extends State<StaffManage> {
   }
 
   //create하기 전 정말 할건지 물어보는 팝업 창.
-  void showCreateAlertDialog(BuildContext context) async {
-    String result = await showDialog(
+  void showCreateAlertDialog() async {
+    await showDialog(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
@@ -221,11 +302,7 @@ class StaffManageState extends State<StaffManage> {
           title: Text("Create?"),
           actions: [
             FlatButton(
-              child: Text("No"),
-              onPressed: () => Navigator.pop(context),
-            ),
-            FlatButton(
-              child: Text("Yes"),
+              child: Text("확인"),
               onPressed: () => {
                 storeData(),
                 //남아있는 텍스트필드 지움
@@ -233,6 +310,10 @@ class StaffManageState extends State<StaffManage> {
                 _clearController2.clear(),
                 Navigator.pop(context),
               },
+            ),
+            FlatButton(
+              child: Text("취소"),
+              onPressed: () => Navigator.pop(context),
             ),
           ],
         );
