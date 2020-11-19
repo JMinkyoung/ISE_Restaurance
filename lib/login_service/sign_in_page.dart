@@ -41,13 +41,23 @@ class SignInPage extends StatelessWidget {
                   children: [
                     TextField(
                       controller: _emailController,
-                      decoration: InputDecoration(hintText: "Enter email"),
+                      decoration: InputDecoration(
+                          hintText: "Enter email",
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.brown),
+                          ),
+                      ),
                     ),
                     const SizedBox(height: 20.0),
                     TextField(
                       controller: _passwordController,
                       obscureText: true,
-                      decoration: InputDecoration(hintText: "Enter password"),
+                      decoration: InputDecoration(
+                          hintText: "Enter password",
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.brown),
+                          ),
+                      ),
                     ),
                     const SizedBox(height: 50.0),
                     RaisedButton(
@@ -111,8 +121,6 @@ class SignInPage extends StatelessWidget {
                   ],
                 ),
               ),
-
-
             ],
           ),
         ),
