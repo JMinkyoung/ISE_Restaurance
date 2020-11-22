@@ -6,6 +6,10 @@ import 'package:restaurance/staff_homepage.dart';
 //로고 누르면 메인페이지로 가도록 설정함
 Widget customAppBar_Manag(context){
   return AppBar(
+    leading: Image.asset(
+      'image/tray.png',
+      height: 200,
+    ),
     title: RaisedButton(
       onPressed: () async {
         Navigator.push(

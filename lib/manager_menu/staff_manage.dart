@@ -21,7 +21,7 @@ class StaffManageState extends State<StaffManage> {
   final _updateKey = GlobalKey<FormState>();
 
   String name, email;
-  String name_up, email_up;
+  String name_up, email_up; //update용 변수
   // textFormField 지우는 컨트롤러
   final TextEditingController _clearController = new TextEditingController();
   final TextEditingController _clearController2 = new TextEditingController();
@@ -54,13 +54,18 @@ class StaffManageState extends State<StaffManage> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 FlatButton(
+                  onPressed: () => {},
+                  child: Text('근무기록'),
+                ),
+                SizedBox(width: 8),
+                FlatButton(
                   onPressed: () => showUpdateData(doc),
-                  child: Text('Update'),
+                  child: Text('수정'),
                 ),
                 SizedBox(width: 8),
                 FlatButton(
                   onPressed: () => showDeleteAlertDialog(doc),
-                  child: Text('Delete'),
+                  child: Text('삭제'),
                 ),
               ],
             )
@@ -95,6 +100,7 @@ class StaffManageState extends State<StaffManage> {
 //        appBar: AppBar(
 //          //title: Text('직원관리'),
 //        ),
+        backgroundColor: Colors.yellow[100],
         appBar: customAppBar_Manag(context),
         body: GestureDetector(
           //화면 다른부분 누르면 올라와있던 키보드 사라짐
@@ -114,7 +120,7 @@ class StaffManageState extends State<StaffManage> {
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: "email",
-                          fillColor: Colors.grey[300],
+                          fillColor: Colors.white,
                           filled: true,
                         ),
                         validator: (value) {
@@ -129,7 +135,7 @@ class StaffManageState extends State<StaffManage> {
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: "name",
-                          fillColor: Colors.grey[300],
+                          fillColor: Colors.white,
                           filled: true,
                         ),
                         validator: (value) {
@@ -147,8 +153,8 @@ class StaffManageState extends State<StaffManage> {
                   FocusScope.of(context)
                       .requestFocus(new FocusNode()) //create시 올라와있던 키보드 사라짐
                 }, //store Data,
-                child: Text('Create', style: TextStyle(color: Colors.white)),
-                color: Colors.green,
+                color: Colors.yellow[300],
+                child: Text('Create', style: TextStyle(color: Colors.black)),
               ),
 
               //직원 내역 카드목록으로 출력
@@ -195,16 +201,16 @@ class StaffManageState extends State<StaffManage> {
     setState(() => id = null);
   }
 
+  //내용 업데이트
   void updateData(doc) async {
-    if (_updateKey.currentState.validate()) {
-      _updateKey.currentState.save();
-      db.collection("users").doc(doc.id).update({
-        'email': '$email_up',
-        'name': '$name_up',
-      });
-    }
+    //if (key.currentState.validate())인식이 안되어서 삭제하였음
+    _updateKey.currentState.save();
+    await db.collection("users").doc(doc.id).update({
+      'email': '$email_up',
+      'name': '$name_up',
+    });
   }
-
+  //업데이트 위해 작성 form 보여줌
   Future<void> showUpdateData(doc) async {
     await showDialog(
       context: context,
@@ -320,4 +326,8 @@ class StaffManageState extends State<StaffManage> {
       },
     );
   }
+
+
+
 }
+
