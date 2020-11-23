@@ -13,9 +13,8 @@ class IngredientMangeState extends State<IngredientMange> {
   final formKey = GlobalKey<FormState>();
   final editformkey = GlobalKey<FormState>();
 
-  String ingredientName;
-  String ingredientQuantity;
-  String dbid;
+  String ingredientName, ingredientQuantity, dbid;
+  String ingredientName_edit, ingredientQuantity_edit;
 
   final TextEditingController _clearController = new TextEditingController();
   final TextEditingController _clearController2 = new TextEditingController();
@@ -58,9 +57,7 @@ class IngredientMangeState extends State<IngredientMange> {
                         borderRadius: BorderRadius.circular(10)),
                     color: Colors.deepPurple,
                     child: Text('수정', style: TextStyle(color: Colors.white)),
-
-                    //수정부분 고쳐야함
-                    onPressed: () => ingredientEditingDisplay(context, doc)),
+                    onPressed: () => ingredientEditDisplay(doc)),
                 FlatButton(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
@@ -72,6 +69,7 @@ class IngredientMangeState extends State<IngredientMange> {
                           barrierDismissible: false,
                           builder: (BuildContext context) {
                             return AlertDialog(
+                              //삭제 요청시 확인 팝업창
                               title: Text('식자재 삭제'),
                               content: SingleChildScrollView(
                                 child: ListBody(
@@ -135,51 +133,11 @@ class IngredientMangeState extends State<IngredientMange> {
           child: ListView(
             padding: EdgeInsets.all(8),
             children: <Widget>[
-              Form(
-                key: formKey,
-                //buildTextFormField()
-                child: new Column(
-                  children: <Widget>[
-                    new TextFormField(
-                      controller: _clearController,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: '식자재1',
-                        fillColor: Colors.grey[300],
-                        labelText: '식자재이름',
-                      ),
-                      // ignore: missing_return
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Please enter some text';
-                        }
-                      },
-                      onSaved: (value) => ingredientName = value,
-                    ),
-                    new TextFormField(
-                      controller: _clearController2,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: '10개',
-                        fillColor: Colors.grey[300],
-                        labelText: '수량',
-                      ),
-                      // ignore: missing_return
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Please enter some text';
-                        }
-                      },
-                      onSaved: (value) => ingredientQuantity = value,
-                    ),
-                  ],
-                ),
-              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   RaisedButton(
-                    onPressed: addIngredient,
+                    onPressed: ingredientCreateDisplay,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
                     color: Colors.deepPurple,
@@ -208,6 +166,8 @@ class IngredientMangeState extends State<IngredientMange> {
         ));
   }
 
+//-----------------------------DB 연동 관련 함수들------------------------------
+
   //새로운 식자재 추가 함수
   void addIngredient() async {
     if (formKey.currentState.validate()) {
@@ -229,77 +189,144 @@ class IngredientMangeState extends State<IngredientMange> {
 
   //식자재 수정 함수
   void uppdateIngredient(DocumentSnapshot doc) async {
-    print(ingredientName);
     if (editformkey.currentState.validate()) {
       editformkey.currentState.save();
       db.collection("Ingredient").doc(doc.id).update({
-        'IngredientName': '$ingredientName',
-        'IngredientQuantity': '$ingredientQuantity',
+        'IngredientName': '$ingredientName_edit',
+        'IngredientQuantity': '$ingredientQuantity_edit',
       });
     }
   }
 
-  //수정할때 띄우는 팝업창
-  ingredientEditingDisplay(BuildContext context, DocumentSnapshot doc) async {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            key: editformkey,
-            title: Text('식자재 수정'),
-            content: SingleChildScrollView(
-              child: new Column(
-                children: <Widget>[
-                  new TextFormField(
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: '자재명1',
-                      fillColor: Colors.grey[300],
-                      labelText: '자재명',
+//---------------------------------------------------------------------------
+
+  //식자재 추가를 위한 텍스트 입력 팝업창
+  Future<void> ingredientCreateDisplay() async {
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SingleChildScrollView(
+            child: Form(
+                key: formKey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: '식자재1',
+                        fillColor: Colors.grey[300],
+                        labelText: '식자재이름',
+                      ),
+                      // ignore: missing_return
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                      },
+                      onSaved: (value) => ingredientName = value,
                     ),
-                    // ignore: missing_return
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                    },
-                    onSaved: (value) => ingredientName = value,
-                  ),
-                  new TextFormField(
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: '10개',
-                      fillColor: Colors.grey[300],
-                      labelText: '수량',
+                    TextFormField(
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: '10개',
+                        fillColor: Colors.grey[300],
+                        labelText: '수량',
+                      ),
+                      // ignore: missing_return
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                      },
+                      onSaved: (value) => ingredientQuantity = value,
                     ),
-                    // ignore: missing_return
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                    },
-                    onSaved: (value) => ingredientQuantity = value,
-                  ),
-                ],
-              ),
+                  ],
+                )),
+          ),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text('확인'),
+              onPressed: () => {
+                addIngredient(),
+                Navigator.of(context).pop(),
+              },
             ),
-            actions: <Widget>[
-              new FlatButton(
-                child: new Text('확인'),
-                onPressed: () {
-                  print(ingredientName);
-                  uppdateIngredient(doc);
-                  Navigator.of(context).pop();
-                },
-              ),
-              new FlatButton(
-                child: new Text('취소'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              )
-            ],
-          );
-        });
+            new FlatButton(
+              child: new Text('취소'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  //식자재 추가를 위한 텍스트 입력 팝업창
+  Future<void> ingredientEditDisplay(doc) async {
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SingleChildScrollView(
+            child: Form(
+                key: editformkey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: '식자재1',
+                        fillColor: Colors.grey[300],
+                        labelText: '식자재이름',
+                      ),
+                      // ignore: missing_return
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                      },
+                      onSaved: (value) => ingredientName_edit = value,
+                    ),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: '10개',
+                        fillColor: Colors.grey[300],
+                        labelText: '수량',
+                      ),
+                      // ignore: missing_return
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                      },
+                      onSaved: (value) => ingredientQuantity_edit = value,
+                    ),
+                  ],
+                )),
+          ),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text('확인'),
+              onPressed: () => {
+                uppdateIngredient(doc),
+                Navigator.of(context).pop(),
+              },
+            ),
+            new FlatButton(
+              child: new Text('취소'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      },
+    );
   }
 }

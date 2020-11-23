@@ -11,11 +11,13 @@ class MenuManage extends StatefulWidget {
 class MenuManageState extends State<MenuManage> {
   final db = FirebaseFirestore.instance;
   final _formKey = GlobalKey<FormState>();
-  final editformkey = GlobalKey<FormState>();
-  String menuName;
-  String menuPrice;
-  String menuType;
-  String dbid;
+  final _editkey = GlobalKey<FormState>();
+  String menuName, menuPrice, menuType, dbid;
+  String menuTime;
+  // ignore: non_constant_identifier_names
+  String menuName_edit, menuPrice_edit, menuType_edit;
+  String menuTime_edit;
+
   // textFormField 지우는 컨트롤러
   final TextEditingController _clearController = new TextEditingController();
   final TextEditingController _clearController2 = new TextEditingController();
@@ -55,6 +57,13 @@ class MenuManageState extends State<MenuManage> {
                   fontWeight: FontWeight.bold,
                   color: Colors.white),
             ),
+            Text(
+              '소요시간: ${menudata['MenuTime']} 분',
+              style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
+            ),
             SizedBox(height: 12),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -65,7 +74,7 @@ class MenuManageState extends State<MenuManage> {
                       borderRadius: BorderRadius.circular(10)),
                   color: Colors.deepPurple,
                   child: Text('메뉴수정', style: TextStyle(color: Colors.white)),
-                  onPressed: () => menuEditingDisplay(context),
+                  onPressed: () => menuEditingDisplay(doc),
                 ),
                 FlatButton(
                     shape: RoundedRectangleBorder(
@@ -73,11 +82,11 @@ class MenuManageState extends State<MenuManage> {
                     color: Colors.deepPurple,
                     child: Text('메뉴삭제', style: TextStyle(color: Colors.white)),
                     onPressed: () {
-                      //메뉴 삭제시 삭제여부 확인 팝업창
                       showDialog(
                           context: context,
                           barrierDismissible: false,
                           builder: (BuildContext context) {
+                            //삭제 요청시 확인 팝업창
                             return AlertDialog(
                               title: Text('메뉴 삭제'),
                               content: SingleChildScrollView(
@@ -142,67 +151,11 @@ class MenuManageState extends State<MenuManage> {
           child: ListView(
             padding: EdgeInsets.all(8),
             children: <Widget>[
-              Form(
-                key: _formKey,
-                //buildTextFormField()
-                child: new Column(
-                  children: <Widget>[
-                    new TextFormField(
-                      controller: _clearController,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: '메뉴1',
-                        fillColor: Colors.grey[300],
-                        labelText: '메뉴이름',
-                      ),
-                      // ignore: missing_return
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Please enter some text';
-                        }
-                      },
-                      onSaved: (value) => menuName = value,
-                    ),
-                    new TextFormField(
-                      controller: _clearController2,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: '13000원',
-                        fillColor: Colors.grey[300],
-                        labelText: '가격',
-                      ),
-                      // ignore: missing_return
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Please enter some text';
-                        }
-                      },
-                      onSaved: (value) => menuPrice = value,
-                    ),
-                    new TextFormField(
-                      controller: _clearController3,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: '양식',
-                        fillColor: Colors.grey[300],
-                        labelText: '카테고리',
-                      ),
-                      // ignore: missing_return
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Please enter some text';
-                        }
-                      },
-                      onSaved: (value) => menuType = value,
-                    ),
-                  ],
-                ),
-              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   RaisedButton(
-                    onPressed: addMenu,
+                    onPressed: menuCreateDisplay,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
                     color: Colors.deepPurple,
@@ -231,6 +184,7 @@ class MenuManageState extends State<MenuManage> {
         ));
   }
 
+  //-----------------------------DB 연동 관련 함수들------------------------------
   void addMenu() async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
@@ -238,6 +192,7 @@ class MenuManageState extends State<MenuManage> {
         'MenuName': '$menuName',
         'MenuPrice': '$menuPrice',
         'MenuType': '$menuType',
+        'MenuTime': '$menuTime',
       });
       setState(() => dbid = ref.id);
       print(ref.id);
@@ -256,15 +211,15 @@ class MenuManageState extends State<MenuManage> {
     print(snapshot['MenuPrice']);
   }
 
-  void uppdateMenu(DocumentSnapshot doc) async {
-    if (editformkey.currentState.validate()) {
-      editformkey.currentState.save();
-      db.collection("Menu").doc(doc.id).update({
-        'MenuName': '$menuName',
-        'MenuPrice': '$menuPrice',
-        'MenuType': '$menuType',
-      });
-    }
+  void uppdateMenu(doc) async {
+    _editkey.currentState.save();
+    await db.collection("Menu").doc(doc.id).update({
+      'MenuName': '$menuName_edit',
+      'MenuPrice': '$menuPrice_edit',
+      'MenuType': '$menuType_edit',
+      'MenuTime': '$menuTime_edit',
+    });
+
     //남아있는 텍스트필드 지움
     _clearController.clear();
     _clearController2.clear();
@@ -278,81 +233,195 @@ class MenuManageState extends State<MenuManage> {
     setState(() => dbid = null);
   }
 
-  //메뉴 수정을 위해 팝업창에 TextField 생성하는 부분 (아직미완)
-  menuEditingDisplay(BuildContext context) async {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            key: editformkey,
-            title: Text('메뉴수정'),
-            content: SingleChildScrollView(
-              child: new Column(
-                children: <Widget>[
-                  new TextFormField(
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: '메뉴1',
-                      fillColor: Colors.grey[300],
-                      labelText: '메뉴이름',
+//---------------------------------------------------------------------------
+
+  //메뉴 추가를 위한 텍스트 입력 팝업창
+  Future<void> menuCreateDisplay() async {
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SingleChildScrollView(
+            child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: '메뉴1',
+                        fillColor: Colors.grey[300],
+                        labelText: '메뉴이름',
+                      ),
+                      // ignore: missing_return
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                      },
+                      onSaved: (value) => menuName = value,
                     ),
-                    // ignore: missing_return
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                    },
-                    onSaved: (value) => menuName = value,
-                  ),
-                  new TextFormField(
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: '13000원',
-                      fillColor: Colors.grey[300],
-                      labelText: '가격',
+                    TextFormField(
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: '13000원',
+                        fillColor: Colors.grey[300],
+                        labelText: '가격',
+                      ),
+                      // ignore: missing_return
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                      },
+                      onSaved: (value) => menuPrice = value,
                     ),
-                    // ignore: missing_return
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                    },
-                    onSaved: (value) => menuPrice = value,
-                  ),
-                  new TextFormField(
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: '양식',
-                      fillColor: Colors.grey[300],
-                      labelText: '카테고리',
+                    TextFormField(
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: '양식',
+                        fillColor: Colors.grey[300],
+                        labelText: '카테고리',
+                      ),
+                      // ignore: missing_return
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                      },
+                      onSaved: (value) => menuType = value,
                     ),
-                    // ignore: missing_return
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                    },
-                    onSaved: (value) => menuType = value,
-                  ),
-                ],
-              ),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: '10',
+                        fillColor: Colors.grey[300],
+                        labelText: '소요시간',
+                      ),
+                      // ignore: missing_return
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                      },
+                      onSaved: (value) => menuTime = value,
+                    ),
+                  ],
+                )),
+          ),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text('확인'),
+              onPressed: () => {
+                addMenu(),
+                Navigator.of(context).pop(),
+              },
             ),
-            actions: <Widget>[
-              new FlatButton(
-                child: new Text('확인'),
-                onPressed: () {
-                  //uppdateMenu(doc),
-                  Navigator.of(context).pop();
-                },
-              ),
-              new FlatButton(
-                child: new Text('취소'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              )
-            ],
-          );
-        });
+            new FlatButton(
+              child: new Text('취소'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  //메뉴 수정을 위한 텍스트 입력 팝업창
+  Future<void> menuEditingDisplay(doc) async {
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SingleChildScrollView(
+            child: Form(
+                key: _editkey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: '메뉴1',
+                        fillColor: Colors.grey[300],
+                        labelText: '메뉴이름',
+                      ),
+                      // ignore: missing_return
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                      },
+                      onSaved: (value) => menuName_edit = value,
+                    ),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: '13000원',
+                        fillColor: Colors.grey[300],
+                        labelText: '가격',
+                      ),
+                      // ignore: missing_return
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                      },
+                      onSaved: (value) => menuPrice_edit = value,
+                    ),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: '양식',
+                        fillColor: Colors.grey[300],
+                        labelText: '카테고리',
+                      ),
+                      // ignore: missing_return
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                      },
+                      onSaved: (value) => menuType_edit = value,
+                    ),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: '10',
+                        fillColor: Colors.grey[300],
+                        labelText: '소요시간',
+                      ),
+                      // ignore: missing_return
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                      },
+                      onSaved: (value) => menuTime_edit = value,
+                    ),
+                  ],
+                )),
+          ),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text('확인'),
+              onPressed: () => {
+                uppdateMenu(doc),
+                Navigator.of(context).pop(),
+              },
+            ),
+            new FlatButton(
+              child: new Text('취소'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      },
+    );
   }
 }
