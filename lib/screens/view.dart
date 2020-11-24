@@ -59,7 +59,7 @@ class _ViewPageState extends State<ViewPage> {
             children: <Widget>[
               StreamBuilder<QuerySnapshot>(
                   stream: FirebaseFirestore.instance
-                      .collection('Sales').orderBy('sold', descending: true)
+                      .collection('OrderRecord').orderBy('sold', descending: true)
                       .snapshots()
                   ,
                   // ignore: missing_return
