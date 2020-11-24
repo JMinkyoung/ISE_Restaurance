@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../customAppBar.dart';
+
 class MenuManage extends StatefulWidget {
   @override
   MenuManageState createState() {
@@ -26,7 +28,8 @@ class MenuManageState extends State<MenuManage> {
   Card buildItem(DocumentSnapshot doc) {
     final menudata = doc.data();
     return Card(
-      color: Colors.deepPurpleAccent,
+      elevation: 10,
+      color: Colors.orangeAccent[100],
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -39,30 +42,30 @@ class MenuManageState extends State<MenuManage> {
             Text(
               '메뉴: ${menudata['MenuName']}',
               style: TextStyle(
-                  fontSize: 24,
+                  fontSize: 22,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white),
+                  color: Colors.black),
             ),
             Text(
               '가격: ${menudata['MenuPrice']}',
               style: TextStyle(
-                  fontSize: 24,
+                  fontSize: 22,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white),
+                  color: Colors.black),
             ),
             Text(
               '카테고리: ${menudata['MenuType']}',
               style: TextStyle(
-                  fontSize: 24,
+                  fontSize: 22,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white),
+                  color: Colors.black),
             ),
             Text(
               '소요시간: ${menudata['MenuTime']} 분',
               style: TextStyle(
-                  fontSize: 24,
+                  fontSize: 22,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white),
+                  color: Colors.black),
             ),
             SizedBox(height: 12),
             Row(
@@ -72,14 +75,15 @@ class MenuManageState extends State<MenuManage> {
                 FlatButton(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
-                  color: Colors.deepPurple,
+                  color: Colors.orange[300],
                   child: Text('메뉴수정', style: TextStyle(color: Colors.white)),
                   onPressed: () => menuEditingDisplay(doc),
                 ),
+                SizedBox(width: 8),
                 FlatButton(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
-                    color: Colors.deepPurple,
+                    color: Colors.orange[300],
                     child: Text('메뉴삭제', style: TextStyle(color: Colors.white)),
                     onPressed: () {
                       showDialog(
@@ -123,26 +127,8 @@ class MenuManageState extends State<MenuManage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text("Restaurance",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35)),
-          bottom: PreferredSize(
-            child: Text(
-              "메뉴관리",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20),
-            ),
-            preferredSize: null,
-          ),
-          backgroundColor: Colors.deepPurple,
-          leading: Image.asset(
-            'image/tray.png',
-            height: 200,
-          ),
-        ),
+    return Scaffold(backgroundColor: Colors.yellow[100],
+        appBar: customAppBar_Manag(context,"메뉴 관리"),
         body: GestureDetector(
           onTap: () {
             //화면 다른부분 누르면 올라와있던 키보드 사라짐
@@ -158,10 +144,10 @@ class MenuManageState extends State<MenuManage> {
                     onPressed: menuCreateDisplay,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
-                    color: Colors.deepPurple,
+                    color: Colors.orange[200],
                     child: Text("메뉴추가",
                         style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold)),
+                            color: Colors.black, fontWeight: FontWeight.bold)),
                   ),
                 ],
               ),

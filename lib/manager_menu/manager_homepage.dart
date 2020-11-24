@@ -13,7 +13,7 @@ class ManagerHome extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.yellow[100],
-      appBar: customAppBar_Manag(context),
+      appBar: customAppBar_Manag(context,""),
       body: Stack(children: [
         Positioned(
           top: 40,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:restaurance/customAppBar.dart';
 
 class IngredientMange extends StatefulWidget {
   @override
@@ -23,7 +24,8 @@ class IngredientMangeState extends State<IngredientMange> {
   Card buildItem(DocumentSnapshot doc) {
     final ingredientData = doc.data();
     return Card(
-      color: Colors.deepPurpleAccent,
+      elevation: 10,
+      color: Colors.orangeAccent[100],
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -36,16 +38,16 @@ class IngredientMangeState extends State<IngredientMange> {
             Text(
               '자재명: ${ingredientData['IngredientName']}',
               style: TextStyle(
-                  fontSize: 24,
+                  fontSize: 22,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white),
+                  color: Colors.black),
             ),
             Text(
               '수량: ${ingredientData['IngredientQuantity']}',
               style: TextStyle(
-                  fontSize: 24,
+                  fontSize: 22,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white),
+                  color: Colors.black),
             ),
             SizedBox(height: 12),
             Row(
@@ -55,13 +57,14 @@ class IngredientMangeState extends State<IngredientMange> {
                 FlatButton(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
-                    color: Colors.deepPurple,
+                    color: Colors.orange[300],
                     child: Text('수정', style: TextStyle(color: Colors.white)),
                     onPressed: () => ingredientEditDisplay(doc)),
+                SizedBox(width: 8),
                 FlatButton(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
-                    color: Colors.deepPurple,
+                    color: Colors.orange[300],
                     child: Text('삭제', style: TextStyle(color: Colors.white)),
                     onPressed: () {
                       showDialog(
@@ -106,25 +109,8 @@ class IngredientMangeState extends State<IngredientMange> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Restaurance",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35)),
-          bottom: PreferredSize(
-            child: Text(
-              "식자재 관리",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20),
-            ),
-            preferredSize: null,
-          ),
-          backgroundColor: Colors.deepPurple,
-          leading: Image.asset(
-            'image/tray.png',
-            height: 200,
-          ),
-        ),
+        backgroundColor: Colors.yellow[100],
+        appBar: customAppBar_Manag(context,"식재료 관리"),
         body: GestureDetector(
           onTap: () {
             //화면 다른부분 누르면 올라와있던 키보드 사라짐
@@ -140,10 +126,10 @@ class IngredientMangeState extends State<IngredientMange> {
                     onPressed: ingredientCreateDisplay,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
-                    color: Colors.deepPurple,
+                    color: Colors.orange[200],
                     child: Text("식자재추가",
                         style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold)),
+                            color: Colors.black, fontWeight: FontWeight.bold)),
                   ),
                 ],
               ),

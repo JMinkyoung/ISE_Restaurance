@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:restaurance/customAppBar.dart';
 
 /// 직원관리 페이지
@@ -20,17 +22,18 @@ class StaffManageState extends State<StaffManage> {
   final _formKey = GlobalKey<FormState>();
   final _updateKey = GlobalKey<FormState>();
 
-  String name, email;
-  String name_up, email_up; //update용 변수
+  String name, email, password;
+  String name_up, email_up, password_up; //update용 변수
   // textFormField 지우는 컨트롤러
   final TextEditingController _clearController = new TextEditingController();
   final TextEditingController _clearController2 = new TextEditingController();
-
+  final TextEditingController _clearController3 = new TextEditingController();
   //snapshot 받아서 현재 있는 직원들을 카드로 보여주는 위젯
   //목록으로 만드는것은 위젯 밖에서 한다.
   Card buildItem(DocumentSnapshot doc) {
     final userdata = doc.data();
     return Card(
+      elevation: 10,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -97,11 +100,8 @@ class StaffManageState extends State<StaffManage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-//        appBar: AppBar(
-//          //title: Text('직원관리'),
-//        ),
         backgroundColor: Colors.yellow[100],
-        appBar: customAppBar_Manag(context),
+        appBar: customAppBar_Manag(context, "직원관리"),
         body: GestureDetector(
           //화면 다른부분 누르면 올라와있던 키보드 사라짐
           onTap: () {
@@ -145,6 +145,21 @@ class StaffManageState extends State<StaffManage> {
                         },
                         onSaved: (value) => name = value,
                       ),
+                      TextFormField(
+                        controller: _clearController3,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "password",
+                          fillColor: Colors.white,
+                          filled: true,
+                        ),
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please enter some text';
+                          }
+                        },
+                        onSaved: (value) => password = value,
+                      ),
                     ],
                   )),
               RaisedButton(
@@ -177,19 +192,6 @@ class StaffManageState extends State<StaffManage> {
   }
 
   ///------------------------------------------------------
-
-  void storeData() async {
-    if (_formKey.currentState.validate()) {
-      _formKey.currentState.save();
-      DocumentReference ref = await db.collection("users").add({
-        'email': '$email',
-        'name': '$name',
-        'role': 'Staff',
-      });
-      setState(() => id = ref.id);
-      print(ref.id);
-    }
-  }
 
   void readData() async {
     DocumentSnapshot snapshot = await db.collection('users').doc(id).get();
@@ -298,6 +300,34 @@ class StaffManageState extends State<StaffManage> {
     );
   }
 
+  //데이터 저장
+  void storeData() async {
+    if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
+      //계정 생성도 동시에 함
+      register(email,password);
+      //firestore에 사용자 내용 추가
+      DocumentReference ref = await db.collection("users").add({
+        'email': '$email',
+        'name': '$name',
+        'role': 'Staff',
+      });
+      setState(() => id = ref.id);
+      print(ref.id);
+    }
+  }
+
+  //계정 생성시 auto login막기 위해 만든 함수
+  static Future<UserCredential> register(String email, String password) async {
+    FirebaseApp app = await Firebase.initializeApp(
+        name: 'Secondary', options: Firebase.app().options);
+    UserCredential userCredential = await FirebaseAuth.instanceFor(app: app)
+          .createUserWithEmailAndPassword(email: email, password: password);
+
+    await app.delete();
+    return Future.sync(() => userCredential);
+  }
+
   //create하기 전 정말 할건지 물어보는 팝업 창.
   void showCreateAlertDialog() async {
     await showDialog(
@@ -314,6 +344,7 @@ class StaffManageState extends State<StaffManage> {
                 //남아있는 텍스트필드 지움
                 _clearController.clear(),
                 _clearController2.clear(),
+                _clearController3.clear(),
                 Navigator.pop(context),
               },
             ),
