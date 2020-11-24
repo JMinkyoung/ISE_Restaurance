@@ -2,30 +2,33 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class ViewPage extends StatelessWidget {
-  ViewPage({Key key, this.id}) : super(key: key);
+class ViewPage extends StatefulWidget {
+  ViewPage({Key key, this.title}) : super(key: key);
 
-  final String id;
-  int countMenu = 0;
-  String menuTemp;
-
+  final String title;
 
   @override
-  //Order record에서 데이터를 가져와서 메뉴이름에 따라 +1
+  _ViewPageState createState() => _ViewPageState();
+}
+
+class _ViewPageState extends State<ViewPage> {
+  int rank = 0;
+
+  @override
   Widget ViewItem(DocumentSnapshot doc) {
-    menuTemp = doc['MenuName'];
-    FirebaseFirestore.instance
-        .collection('OrderList')
-        .where("MenuName", isEqualTo: menuTemp)
-        .get()
-        .then((QuerySnapshot ds) {
-      ds.docs.forEach((doc) => getCount());
-    });
     final vid = doc.data();
+    rank++;
     return Container(
       child: Table(
         children: [
           TableRow(children: [
+            Text('판매순위:'+rank.toString()+'위',
+                style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black),
+                textAlign: TextAlign.left),
+            Padding(padding: EdgeInsets.all(0.0)),
             Text('메뉴이름: ${vid['MenuName']}\n',
                 style: TextStyle(
                     fontSize: 24,
@@ -33,7 +36,7 @@ class ViewPage extends StatelessWidget {
                     color: Colors.black),
                 textAlign: TextAlign.left),
             Padding(padding: EdgeInsets.all(0.0)),
-            Text(countMenu.toString(),
+            Text('${vid['sold']}개 판매되었습니다.',
                 style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -56,9 +59,8 @@ class ViewPage extends StatelessWidget {
             children: <Widget>[
               StreamBuilder<QuerySnapshot>(
                   stream: FirebaseFirestore.instance
-                      .collection('Menu')
-                  //.where('MenuName', isEqualTo: id)
-                      .snapshots() //OrderRecord값을 모조리 불러옴
+                      .collection('Sales').orderBy('sold', descending: true)
+                      .snapshots()
                   ,
                   // ignore: missing_return
                   builder: (context, snapshot) {
@@ -74,10 +76,5 @@ class ViewPage extends StatelessWidget {
             ],
           ),
         ));
-  }
-
-  getCount() {
-    countMenu+=1;
-    print(countMenu);
   }
 }
