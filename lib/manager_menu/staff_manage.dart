@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:restaurance/customAppBar.dart';
+import 'package:restaurance/manager_menu/staffPayTime.dart';
 
 /// 직원관리 페이지
 /// 직원 목록 불러와 카드 형태로 출력하고, 생성 및 삭제를 진행할 수 있다.
@@ -16,6 +17,7 @@ class StaffManage extends StatefulWidget {
 }
 
 class StaffManageState extends State<StaffManage> {
+
   //createStaff의 form작성에 필요한 변수 선언
   String id;
   final db = FirebaseFirestore.instance;
@@ -57,7 +59,10 @@ class StaffManageState extends State<StaffManage> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 FlatButton(
-                  onPressed: () => {},
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PayTime(userEm: userdata['email'],)),
+                  ),
                   child: Text('근무기록'),
                 ),
                 SizedBox(width: 8),
@@ -212,6 +217,7 @@ class StaffManageState extends State<StaffManage> {
       'name': '$name_up',
     });
   }
+
   //업데이트 위해 작성 form 보여줌
   Future<void> showUpdateData(doc) async {
     await showDialog(
@@ -234,7 +240,8 @@ class StaffManageState extends State<StaffManage> {
                       validator: (value) {
                         if (value.isEmpty) {
                           return 'Please enter some text';
-                        } else return'';
+                        } else
+                          return '';
                       },
                       onSaved: (value) => email_up = value,
                     ),
@@ -248,7 +255,8 @@ class StaffManageState extends State<StaffManage> {
                       validator: (value) {
                         if (value.isEmpty) {
                           return 'Please enter some text';
-                        }else return'';
+                        } else
+                          return '';
                       },
                       onSaved: (value) => name_up = value,
                     ),
@@ -305,7 +313,7 @@ class StaffManageState extends State<StaffManage> {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
       //계정 생성도 동시에 함
-      register(email,password);
+      register('$email', '$password');
       //firestore에 사용자 내용 추가
       DocumentReference ref = await db.collection("users").add({
         'email': '$email',
@@ -322,7 +330,7 @@ class StaffManageState extends State<StaffManage> {
     FirebaseApp app = await Firebase.initializeApp(
         name: 'Secondary', options: Firebase.app().options);
     UserCredential userCredential = await FirebaseAuth.instanceFor(app: app)
-          .createUserWithEmailAndPassword(email: email, password: password);
+        .createUserWithEmailAndPassword(email: email, password: password);
 
     await app.delete();
     return Future.sync(() => userCredential);
@@ -357,8 +365,4 @@ class StaffManageState extends State<StaffManage> {
       },
     );
   }
-
-
-
 }
-

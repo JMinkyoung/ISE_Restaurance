@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-import '../customAppBar.dart';
+import 'package:restaurance/customAppBar.dart';
 
 class MenuManage extends StatefulWidget {
   @override
