@@ -43,7 +43,7 @@ class IngredientMangeState extends State<IngredientMange> {
                   color: Colors.black),
             ),
             Text(
-              '수량: ${ingredientData['IngredientQuantity']}',
+              '수량: ${ingredientData['IngredientQuantity']} 개',
               style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -110,7 +110,7 @@ class IngredientMangeState extends State<IngredientMange> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.yellow[100],
-        appBar: customAppBar_Manag(context,"식재료 관리"),
+        appBar: customAppBar_Manag(context, "식재료 관리"),
         body: GestureDetector(
           onTap: () {
             //화면 다른부분 누르면 올라와있던 키보드 사라짐

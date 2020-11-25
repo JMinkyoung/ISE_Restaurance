@@ -40,14 +40,14 @@ class MenuManageState extends State<MenuManage> {
               height: 70,
             ),
             Text(
-              '메뉴: ${menudata['MenuName']}',
+              '메뉴이름: ${menudata['MenuName']}',
               style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                   color: Colors.black),
             ),
             Text(
-              '가격: ${menudata['MenuPrice']}',
+              '가격: ${menudata['MenuPrice']} 원',
               style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -127,8 +127,9 @@ class MenuManageState extends State<MenuManage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(backgroundColor: Colors.yellow[100],
-        appBar: customAppBar_Manag(context,"메뉴 관리"),
+    return Scaffold(
+        backgroundColor: Colors.yellow[100],
+        appBar: customAppBar_Manag(context, "메뉴 관리"),
         body: GestureDetector(
           onTap: () {
             //화면 다른부분 누르면 올라와있던 키보드 사라짐
