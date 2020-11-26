@@ -19,7 +19,7 @@ class _PayTimeState extends State<PayTime> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.yellow[100],
-        appBar: customAppBar_Manag(context, "메뉴 관리"),
+        appBar: customAppBar_Manag(context, "근무 기록"),
         body: SafeArea(
           child: GestureDetector(
             onTap: () {
@@ -35,6 +35,7 @@ class _PayTimeState extends State<PayTime> {
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       return Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: snapshot.data.docs
                               .map((doc) => getTimeList(doc, widget.userEm))
                               .toList());
@@ -56,7 +57,7 @@ class _PayTimeState extends State<PayTime> {
     if(userEmail == orderData['useremail']){
       return Card(
         elevation: 10,
-        color: Colors.orangeAccent[100],
+        color: Color(0xfffbffde),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(

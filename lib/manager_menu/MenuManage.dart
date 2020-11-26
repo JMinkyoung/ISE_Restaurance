@@ -28,7 +28,7 @@ class MenuManageState extends State<MenuManage> {
     final menudata = doc.data();
     return Card(
       elevation: 10,
-      color: Colors.orangeAccent[100],
+      color: Color(0xfffbffde),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -74,16 +74,16 @@ class MenuManageState extends State<MenuManage> {
                 FlatButton(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
-                  color: Colors.orange[300],
-                  child: Text('메뉴수정', style: TextStyle(color: Colors.white)),
+                  color: Color(0xffffca69),
+                  child: Text('메뉴수정', style: TextStyle(color: Colors.black)),
                   onPressed: () => menuEditingDisplay(doc),
                 ),
                 SizedBox(width: 8),
                 FlatButton(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
-                    color: Colors.orange[300],
-                    child: Text('메뉴삭제', style: TextStyle(color: Colors.white)),
+                    color: Color(0xffffca69),
+                    child: Text('메뉴삭제', style: TextStyle(color: Colors.black)),
                     onPressed: () {
                       showDialog(
                           context: context,
@@ -134,38 +134,36 @@ class MenuManageState extends State<MenuManage> {
             //화면 다른부분 누르면 올라와있던 키보드 사라짐
             FocusScope.of(context).requestFocus(new FocusNode());
           },
-          child: ListView(
-            padding: EdgeInsets.all(8),
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  RaisedButton(
-                    onPressed: menuCreateDisplay,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    color: Colors.orange[200],
-                    child: Text("메뉴추가",
-                        style: TextStyle(
-                            color: Colors.black, fontWeight: FontWeight.bold)),
-                  ),
-                ],
-              ),
-              StreamBuilder<QuerySnapshot>(
-                stream: db.collection("Menu").snapshots(),
-                // ignore: missing_return
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Column(
-                        children: snapshot.data.docs
-                            .map((doc) => buildItem(doc))
-                            .toList());
-                  } else {
-                    return SizedBox();
-                  }
-                },
-              )
-            ],
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: ListView(
+              padding: EdgeInsets.all(8),
+              children: <Widget>[
+                RaisedButton(
+                  onPressed: menuCreateDisplay,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  color: Colors.orange[200],
+                  child: Text("메뉴추가",
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.bold)),
+                ),
+                StreamBuilder<QuerySnapshot>(
+                  stream: db.collection("Menu").snapshots(),
+                  // ignore: missing_return
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Column(
+                          children: snapshot.data.docs
+                              .map((doc) => buildItem(doc))
+                              .toList());
+                    } else {
+                      return SizedBox();
+                    }
+                  },
+                )
+              ],
+            ),
           ),
         ));
   }

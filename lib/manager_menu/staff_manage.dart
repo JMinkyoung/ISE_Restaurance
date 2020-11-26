@@ -17,7 +17,6 @@ class StaffManage extends StatefulWidget {
 }
 
 class StaffManageState extends State<StaffManage> {
-
   //createStaff의 form작성에 필요한 변수 선언
   String id;
   final db = FirebaseFirestore.instance;
@@ -36,6 +35,7 @@ class StaffManageState extends State<StaffManage> {
     final userdata = doc.data();
     return Card(
       elevation: 10,
+      color: Color(0xfffbffde),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -43,15 +43,15 @@ class StaffManageState extends State<StaffManage> {
           children: <Widget>[
             Text(
               'email: ${userdata['email']}',
-              style: TextStyle(fontSize: 24),
+              style: TextStyle(fontSize: 22),
             ),
             Text(
               'name: ${userdata['name']}',
-              style: TextStyle(fontSize: 24),
+              style: TextStyle(fontSize: 22),
             ),
             Text(
               'role: ${userdata['role']}',
-              style: TextStyle(fontSize: 24),
+              style: TextStyle(fontSize: 22),
             ),
             SizedBox(height: 12),
             Row(
@@ -61,7 +61,10 @@ class StaffManageState extends State<StaffManage> {
                 FlatButton(
                   onPressed: () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => PayTime(userEm: userdata['email'],)),
+                    MaterialPageRoute(
+                        builder: (context) => PayTime(
+                              userEm: userdata['email'],
+                            )),
                   ),
                   child: Text('근무기록'),
                 ),
@@ -112,91 +115,130 @@ class StaffManageState extends State<StaffManage> {
           onTap: () {
             FocusScope.of(context).requestFocus(new FocusNode());
           },
-          child: ListView(
-            padding: EdgeInsets.all(8),
-            children: <Widget>[
-              //직원 생성하는 버튼
-              Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      TextFormField(
-                        controller: _clearController,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: "email",
-                          fillColor: Colors.white,
-                          filled: true,
-                        ),
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Please enter some text';
-                          }
-                        },
-                        onSaved: (value) => email = value,
-                      ),
-                      TextFormField(
-                        controller: _clearController2,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: "name",
-                          fillColor: Colors.white,
-                          filled: true,
-                        ),
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Please enter some text';
-                          }
-                        },
-                        onSaved: (value) => name = value,
-                      ),
-                      TextFormField(
-                        controller: _clearController3,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: "password",
-                          fillColor: Colors.white,
-                          filled: true,
-                        ),
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Please enter some text';
-                          }
-                        },
-                        onSaved: (value) => password = value,
-                      ),
-                    ],
-                  )),
-              RaisedButton(
-                onPressed: () => {
-                  showCreateAlertDialog(),
-                  FocusScope.of(context)
-                      .requestFocus(new FocusNode()) //create시 올라와있던 키보드 사라짐
-                }, //store Data,
-                color: Colors.yellow[300],
-                child: Text('Create', style: TextStyle(color: Colors.black)),
-              ),
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: ListView(
+              padding: EdgeInsets.all(8),
+              children: <Widget>[
+                RaisedButton(
+                  onPressed: () => {
+                    showDialog(
+                        context: context,
+                        barrierDismissible: false, // user must tap button!
+                        builder: (BuildContext context) {
+                          return createStaffForm();
+                        })
+                  },
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  color: Color(0xffffca69),
+                  child: Text("직원추가",
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.bold)),
+                ),
 
-              //직원 내역 카드목록으로 출력
-              StreamBuilder<QuerySnapshot>(
-                stream: db.collection('users').snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Column(
-                        children: snapshot.data.docs
-                            .map((doc) => buildItem(doc))
-                            .toList());
-                  } else {
-                    return SizedBox();
-                  }
-                },
-              )
-            ],
+                //직원 내역 카드목록으로 출력
+                StreamBuilder<QuerySnapshot>(
+                  stream: db.collection('users').snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Column(
+                          children: snapshot.data.docs
+                              .map((doc) => buildItem(doc))
+                              .toList());
+                    } else {
+                      return SizedBox();
+                    }
+                  },
+                )
+              ],
+            ),
           ),
         ));
   }
 
   ///------------------------------------------------------
+
+  Widget createStaffForm() {
+    return AlertDialog(
+        content: SingleChildScrollView(
+      child: Column(children: [
+        Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: _clearController,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: "email",
+                    fillColor: Colors.white,
+                    filled: true,
+                  ),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                  },
+                  onSaved: (value) => email = value,
+                ),
+                TextFormField(
+                  controller: _clearController2,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: "name",
+                    fillColor: Colors.white,
+                    filled: true,
+                  ),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                  },
+                  onSaved: (value) => name = value,
+                ),
+                TextFormField(
+                  controller: _clearController3,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: "password",
+                    fillColor: Colors.white,
+                    filled: true,
+                  ),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                  },
+                  onSaved: (value) => password = value,
+                ),
+              ],
+            )),
+        Row(children: [
+          SizedBox(width: 20,),
+          RaisedButton(
+            onPressed: () => {
+              showCreateAlertDialog(),
+              FocusScope.of(context)
+                  .requestFocus(new FocusNode()), //create시 올라와있던 키보드 사라짐
+            }, //store Data,
+            color: Colors.yellow[300],
+            child: Text('생성', style: TextStyle(color: Colors.black)),
+          ),
+          SizedBox(width: 8,),
+          RaisedButton(
+            onPressed: () => {
+              Navigator.of(context).pop(),
+              FocusScope.of(context)
+                  .requestFocus(new FocusNode()) //create시 올라와있던 키보드 사라짐
+            }, //store Data,
+            color: Colors.yellow[300],
+            child: Text('취소', style: TextStyle(color: Colors.black)),
+          ),
+        ]),
+      ]),
+    ));
+  }
 
   void readData() async {
     DocumentSnapshot snapshot = await db.collection('users').doc(id).get();
@@ -354,6 +396,7 @@ class StaffManageState extends State<StaffManage> {
                 _clearController2.clear(),
                 _clearController3.clear(),
                 Navigator.pop(context),
+                Navigator.of(context).pop(),
               },
             ),
             FlatButton(
