@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:restaurance/customAppBar.dart';
 
 class ViewPage extends StatefulWidget {
   ViewPage({Key key, this.title}) : super(key: key);
@@ -15,7 +16,7 @@ class _ViewPageState extends State<ViewPage> {
   int rank = 0;
 
   // ignore: non_constant_identifier_names
-  Widget ViewItem(DocumentSnapshot doc) {
+  /*  Widget ViewItem(DocumentSnapshot doc) {
     final vid = doc.data();
     rank++;
     return Container(
@@ -46,13 +47,54 @@ class _ViewPageState extends State<ViewPage> {
         ],
       ),
     );
+  } */
+  // ignore: non_constant_identifier_names
+  SizedBox ViewItem(DocumentSnapshot doc) {
+    final vid = doc.data();
+    rank++;
+    return SizedBox(
+      width: 500.0,
+      height: 150.0,
+      child: Card(
+        elevation: 10,
+        color: Color(0xfffbffde),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                '<' + rank.toString() + '위>',
+                style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black),
+              ),
+              Text(
+                '메뉴이름: ${vid['menuName']}\n',
+                style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black),
+              ),
+              Text(
+                '총 ${vid['count']}개 판매되었습니다.',
+                style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('판매 분석'),
-        ),
+        backgroundColor: Colors.yellow[100],
+        appBar: customAppBar_Manag(context, "판매 분석"),
         body: Padding(
           padding: EdgeInsets.all(20),
           child: Column(
