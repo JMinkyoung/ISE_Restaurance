@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/TableRoute.dart';
+import 'package:restaurance/OrderScreens/TableRoute.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 class SelectOrderType extends StatelessWidget
