@@ -19,7 +19,9 @@ class _TableRouteState extends State<TableRoute> {
           .where("completed", isEqualTo: false).where("tableNum", isGreaterThan: 0).snapshots(),
       builder: (context, snapshot){
         if(!snapshot.hasData){
-          return CircularProgressIndicator();
+          return Center(
+            child: Text("주문이 진행중인 테이블이 없습니다."),
+          )
         }
         List<DocumentSnapshot> documents = snapshot.data.documents;
         return ListView(
