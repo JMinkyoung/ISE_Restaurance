@@ -5,6 +5,7 @@ import 'package:restaurance/login_service/authentication_service.dart';
 import 'package:restaurance/manager_menu/staff_manage.dart';
 import 'package:restaurance/manager_menu/MenuManage.dart';
 import 'package:restaurance/manager_menu/IngredientMange.dart';
+import 'package:restaurance/screens/analysis.dart';
 
 class ManagerHome extends StatelessWidget {
   static const double buttonHeight = 60;
@@ -13,7 +14,7 @@ class ManagerHome extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.yellow[100],
-      appBar: customAppBar_Manag(context,""),
+      appBar: customAppBar_Manag(context, ""),
       body: Stack(children: [
         Positioned(
           top: 40,
@@ -130,7 +131,7 @@ class ManagerHome extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => StaffManage()),
+                    MaterialPageRoute(builder: (context) => ViewPage()),
                   );
                 },
                 textColor: Colors.white,

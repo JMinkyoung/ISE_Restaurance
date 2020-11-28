@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'view.dart';
 import 'edit.dart';
 
 class checkTime extends StatefulWidget {
@@ -21,8 +20,6 @@ class _checkTimeState extends State<checkTime> {
   int avgCreateTime = 0;
   int avgPrepTime = 0;
   int Count = 0;
-
-
 
   @override
   Card buildItem(DocumentSnapshot doc) {
@@ -133,13 +130,13 @@ class _checkTimeState extends State<checkTime> {
                 ),
               ),
               Text(''),
-              Text((avgCreateTime/Count).toStringAsFixed(0)+'분',
+              Text((avgCreateTime / Count).toStringAsFixed(0) + '분',
                   style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: Colors.black),
                   textAlign: TextAlign.right),
-              Text((avgPrepTime/Count).toStringAsFixed(0)+'분',
+              Text((avgPrepTime / Count).toStringAsFixed(0) + '분',
                   style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -151,8 +148,7 @@ class _checkTimeState extends State<checkTime> {
         ],
       ),
 
-      appBar: AppBar(
-      ),
+      appBar: AppBar(),
 
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {

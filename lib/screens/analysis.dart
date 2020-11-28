@@ -14,7 +14,7 @@ class ViewPage extends StatefulWidget {
 class _ViewPageState extends State<ViewPage> {
   int rank = 0;
 
-  @override
+  // ignore: non_constant_identifier_names
   Widget ViewItem(DocumentSnapshot doc) {
     final vid = doc.data();
     rank++;
@@ -22,21 +22,21 @@ class _ViewPageState extends State<ViewPage> {
       child: Table(
         children: [
           TableRow(children: [
-            Text('판매순위:'+rank.toString()+'위',
+            Text('판매순위:' + rank.toString() + '위',
                 style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: Colors.black),
                 textAlign: TextAlign.left),
             Padding(padding: EdgeInsets.all(0.0)),
-            Text('메뉴이름: ${vid['MenuName']}\n',
+            Text('메뉴이름: ${vid['menuName']}\n',
                 style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: Colors.black),
                 textAlign: TextAlign.left),
             Padding(padding: EdgeInsets.all(0.0)),
-            Text('${vid['sold']}개 판매되었습니다.',
+            Text('${vid['count']}개 판매되었습니다.',
                 style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -59,9 +59,9 @@ class _ViewPageState extends State<ViewPage> {
             children: <Widget>[
               StreamBuilder<QuerySnapshot>(
                   stream: FirebaseFirestore.instance
-                      .collection('OrderRecord').orderBy('sold', descending: true)
-                      .snapshots()
-                  ,
+                      .collection('OrderRow')
+                      .orderBy('count', descending: true)
+                      .snapshots(),
                   // ignore: missing_return
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
