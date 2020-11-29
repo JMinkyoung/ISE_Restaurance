@@ -110,13 +110,17 @@ class _OrderRouteState extends State<OrderRoute> {
 
   Widget _buildCateButton(List<String> cates, String cate) {
     int index = cates.indexOf(cate);
-    return RaisedButton(
-      onPressed: () {
-        setState(() {
-          _index = index;
-        });
-      },
-      child: Text(cate),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+      child: RaisedButton(
+        onPressed: () {
+          setState(() {
+            _index = index;
+          });
+        },
+        color: Color(0xFFFFD180),
+        child: Text(cate),
+      ),
     );
   }
 
@@ -131,6 +135,33 @@ class _OrderRouteState extends State<OrderRoute> {
 
     return Column(
       children: [
+        SizedBox(height: 25,),
+        Material(
+          elevation: 5,
+          child: Container(
+            width: 500,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: <Color>[
+                  Color(0xFFFFD180),
+                  Color(0xFFFFE0B2),
+                  Color(0xFFFFD180),
+                ],
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Center(
+                child: Text('메뉴 목록',
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.brown)),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: 15,),
         Center(
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -266,7 +297,7 @@ class _OrderRouteState extends State<OrderRoute> {
               Navigator.of(context).pop();
             },
             color: Color(0xFFFFD180),
-            child: Text("변경 취소"),
+            child: Text("변경 취소", style: TextStyle(fontWeight: FontWeight.bold),),
           ),
           SizedBox(width: 10,),
           RaisedButton(
@@ -289,7 +320,7 @@ class _OrderRouteState extends State<OrderRoute> {
               Navigator.of(context).pop();
             },
             color: Color(0xFFFFD180),
-            child: Text("주문 제거"),
+            child: Text("주문 제거",style: TextStyle(fontWeight: FontWeight.bold)),
           ),
           SizedBox(width: 10,),
           RaisedButton(
@@ -324,7 +355,7 @@ class _OrderRouteState extends State<OrderRoute> {
               Navigator.of(context).pop();
             },
             color: Color(0xFFFFD180),
-            child: Text("주문 저장"),
+            child: Text("주문 저장",style: TextStyle(fontWeight: FontWeight.bold)),
           ),
           SizedBox(width: 10,),
           RaisedButton(
@@ -332,7 +363,7 @@ class _OrderRouteState extends State<OrderRoute> {
               _pushPaymentRoute();
             },
             color: Color(0xFFFFD180),
-            child: Text("주문 결제"),
+            child: Text("주문 결제",style: TextStyle(fontWeight: FontWeight.bold)),
           ),
         ],
       );
@@ -376,6 +407,10 @@ class _OrderRouteState extends State<OrderRoute> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 _buildMenuSelector(),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 25, 0, 25),
+                  child: Container(color: Colors.black, width: 4),
+                ),
                 Column(
                   children: [
                     SizedBox(height: 25,),
