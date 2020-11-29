@@ -265,8 +265,10 @@ class _OrderRouteState extends State<OrderRoute> {
             onPressed: () {
               Navigator.of(context).pop();
             },
+            color: Color(0xFFFFD180),
             child: Text("변경 취소"),
           ),
+          SizedBox(width: 10,),
           RaisedButton(
             onPressed: () {
               FirebaseFirestore.instance
@@ -286,8 +288,10 @@ class _OrderRouteState extends State<OrderRoute> {
 
               Navigator.of(context).pop();
             },
+            color: Color(0xFFFFD180),
             child: Text("주문 제거"),
           ),
+          SizedBox(width: 10,),
           RaisedButton(
             onPressed: () {
               FirebaseFirestore.instance
@@ -319,12 +323,15 @@ class _OrderRouteState extends State<OrderRoute> {
 
               Navigator.of(context).pop();
             },
+            color: Color(0xFFFFD180),
             child: Text("주문 저장"),
           ),
+          SizedBox(width: 10,),
           RaisedButton(
             onPressed: () {
               _pushPaymentRoute();
             },
+            color: Color(0xFFFFD180),
             child: Text("주문 결제"),
           ),
         ],
@@ -370,8 +377,33 @@ class _OrderRouteState extends State<OrderRoute> {
               children: <Widget>[
                 _buildMenuSelector(),
                 Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    SizedBox(height: 25,),
+                    Material(
+                      elevation: 5,
+                      child: Container(
+                        width: 500,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: <Color>[
+                              Color(0xFFFFD180),
+                              Color(0xFFFFE0B2),
+                              Color(0xFFFFD180),
+                            ],
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Center(
+                            child: Text('주문상품 목록',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.brown)),
+                          ),
+                        ),
+                      ),
+                    ),
                     SizedBox(
                       height: 400,
                       width: 600,
@@ -382,7 +414,15 @@ class _OrderRouteState extends State<OrderRoute> {
                         children: rows.map((e) => _buildRow(e)).toList(),
                       ),
                     ),
-                    _buildListButtonsRow(),
+                    Expanded(
+                      child: Align(
+                        alignment: FractionalOffset.bottomCenter,
+                        child: Padding(
+                            padding: EdgeInsets.only(bottom: 10.0),
+                            child: _buildListButtonsRow(), //Your widget here,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ],

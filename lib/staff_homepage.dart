@@ -6,8 +6,8 @@ import 'package:restaurance/OrderScreens/SelectOrderType.dart';
 import 'package:restaurance/customAppBar.dart';
 
 class StaffHomePage extends StatelessWidget {
-  static const double buttonHeight = 60;
-  static const double buttonWidth = 200;
+  static const double buttonHeight = 400;
+  static const double buttonWidth = 250;
 
   @override
   Widget build(BuildContext context) {
@@ -27,13 +27,14 @@ class StaffHomePage extends StatelessWidget {
           ),
         ),
         Center(
-          child: Column(
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               RaisedButton(
                 onPressed: () {
                   Navigator.push(context,MaterialPageRoute(builder: (context) => SelectOrderType()),);
                 },
+                elevation: 10,
                 textColor: Colors.white,
                 padding: const EdgeInsets.all(0.0),
                 child: Container(
@@ -50,7 +51,7 @@ class StaffHomePage extends StatelessWidget {
                   ),
                   padding: const EdgeInsets.all(10.0),
                   child: Center(
-                    child: const Text('메뉴 주문',
+                    child: const Text('메뉴 주문 및 결제',
                         style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -58,11 +59,12 @@ class StaffHomePage extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 25.0),
+              const SizedBox(width: 45.0),
               RaisedButton(
                 onPressed: () {
                   Navigator.push(context,MaterialPageRoute(builder: (context) => checkTime()),);
                 },
+                elevation: 10,
                 textColor: Colors.white,
                 padding: const EdgeInsets.all(0.0),
                 child: Container(
@@ -80,35 +82,6 @@ class StaffHomePage extends StatelessWidget {
                   padding: const EdgeInsets.all(10.0),
                   child: Center(
                     child: const Text('소요시간 및 준비시간',
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.brown)),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 25.0),
-              RaisedButton(
-                onPressed: () {
-                  //Navigator.push(context,MaterialPageRoute(builder: (context) =>   ),);
-                },
-                textColor: Colors.white,
-                padding: const EdgeInsets.all(0.0),
-                child: Container(
-                  height: buttonHeight,
-                  width: buttonWidth,
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: <Color>[
-                        Color(0xFFFFD180),
-                        Color(0xFFFFE0B2),
-                        Color(0xFFFFD180),
-                      ],
-                    ),
-                  ),
-                  padding: const EdgeInsets.all(10.0),
-                  child: Center(
-                    child: const Text('결제',
                         style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,

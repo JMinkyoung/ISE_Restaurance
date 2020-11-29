@@ -8,8 +8,8 @@ import 'package:restaurance/manager_menu/IngredientMange.dart';
 import 'package:restaurance/screens/analysis.dart';
 
 class ManagerHome extends StatelessWidget {
-  static const double buttonHeight = 60;
-  static const double buttonWidth = 200;
+  static const double buttonHeight = 400;
+  static const double buttonWidth = 250;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +28,7 @@ class ManagerHome extends StatelessWidget {
           ),
         ),
         Center(
-          child: Column(
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               RaisedButton(
@@ -38,20 +38,21 @@ class ManagerHome extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => StaffManage()),
                   );
                 },
+                elevation: 10,
                 textColor: Colors.white,
                 padding: const EdgeInsets.all(0.0),
                 child: Container(
                   height: buttonHeight,
                   width: buttonWidth,
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: <Color>[
-                        Color(0xFFFFD180),
-                        Color(0xFFFFE0B2),
-                        Color(0xFFFFD180),
-                      ],
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: <Color>[
+                          Color(0xFFFFD180),
+                          Color(0xFFFFE0B2),
+                          Color(0xFFFFD180),
+                        ],
+                      ),
                     ),
-                  ),
                   padding: const EdgeInsets.all(10.0),
                   child: Center(
                     child: const Text('직원 관리',
@@ -62,7 +63,7 @@ class ManagerHome extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 25.0),
+              const SizedBox(width: 25.0),
               RaisedButton(
                 onPressed: () {
                   Navigator.push(
@@ -70,6 +71,7 @@ class ManagerHome extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => MenuManage()),
                   );
                 },
+                elevation: 10,
                 textColor: Colors.white,
                 padding: const EdgeInsets.all(0.0),
                 child: Container(
@@ -94,7 +96,7 @@ class ManagerHome extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 25.0),
+              const SizedBox(width: 25.0),
               RaisedButton(
                 onPressed: () {
                   Navigator.push(
@@ -102,6 +104,7 @@ class ManagerHome extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => IngredientMange()),
                   );
                 },
+                elevation: 10,
                 textColor: Colors.white,
                 padding: const EdgeInsets.all(0.0),
                 child: Container(
@@ -126,7 +129,7 @@ class ManagerHome extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 25.0),
+              const SizedBox(width: 25.0,),
               RaisedButton(
                 onPressed: () {
                   Navigator.push(
@@ -134,6 +137,7 @@ class ManagerHome extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => ViewPage()),
                   );
                 },
+                elevation: 10,
                 textColor: Colors.white,
                 padding: const EdgeInsets.all(0.0),
                 child: Container(
