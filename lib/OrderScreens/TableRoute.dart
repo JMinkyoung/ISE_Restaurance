@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 import 'package:restaurance/OrderScreens/OrderRoute.dart';
-import 'package:restaurance/customAppBar.dart';
 
 class TableRoute extends StatefulWidget {
   TableRoute({Key key}) : super(key: key);
@@ -24,13 +23,9 @@ class _TableRouteState extends State<TableRoute> {
           );
         }
         List<DocumentSnapshot> documents = snapshot.data.documents;
-
-        return Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: ListView(
-            padding: EdgeInsets.all(8),
-            children: documents.map((eachDocument) => _buildRow(eachDocument)).toList(),
-          ),
+        return ListView(
+          padding:EdgeInsets.only(top: 20.0),
+          children: documents.map((eachDocument) => _buildRow(eachDocument)).toList(),
         );
       },
     );
@@ -39,79 +34,57 @@ class _TableRouteState extends State<TableRoute> {
   Widget _buildRow(DocumentSnapshot snapshot)
   {
     return Card(
-      elevation: 10,
-      color: Color(0xfffbffde),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ListTile(
-          title: Column(
-            children: <Widget>[
-              Align(
-                alignment: FractionalOffset.topCenter,
-                child: Text(
-                  snapshot.data()["tableNum"].toString() + "번 테이블",
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black),
-                ),
+      child: ListTile(
+        title: Column(
+          children: <Widget>[
+            Align(
+              alignment: FractionalOffset.topLeft,
+              child: Text(snapshot.data()["tableNum"].toString() + "번 테이블"),
+            ),
+            Center(
+              child: StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection("OrderRow")
+                    .where("orderId", isEqualTo: snapshot.id).snapshots(),
+                builder: (context, snapshot){
+                  if(!snapshot.hasData){
+                    return Text("");
+                  }
+                  List<DocumentSnapshot> documents = snapshot.data.documents;
+                  return Column(
+                    children: documents.map((eachDocument) => _buildOrderRow(eachDocument)).toList(),
+                  );
+                },
               ),
-              Align(
-                alignment: FractionalOffset.center,
-                child: StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection("OrderRow")
-                      .where("orderId", isEqualTo: snapshot.id).snapshots(),
-                  builder: (context, snapshot){
-                    if(!snapshot.hasData){
-                      return Text("");
-                    }
-                    List<DocumentSnapshot> documents = snapshot.data.documents;
-                    return Column(
-                      children: documents.map((eachDocument) => _buildOrderRow(eachDocument)).toList(),
-                    );
-                  },
-                ),
-              ),
-              Align(
-                alignment: FractionalOffset.bottomRight,
-                child: Text(
-                  snapshot.data()["total"].toString() + "원",
-                  style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black),),
-              ),
-            ],
-          ),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => OrderRoute(table: snapshot.data()["tableNum"], orderId: snapshot.id)),
-            );
-          },
+            ),
+            Align(
+              alignment: FractionalOffset.bottomRight,
+              child: Text(snapshot.data()["total"].toString() + "원"),
+            ),
+          ],
         ),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => OrderRoute(table: snapshot.data()["tableNum"], orderId: snapshot.id)),
+          );
+        },
       ),
     );
   }
 
   Widget _buildOrderRow(DocumentSnapshot snapshot)
   {
-    return Text(
-      snapshot.data()["menuName"].toString() + " " + snapshot.data()["count"].toString() + "개",
-      style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          color: Colors.black),
-    );
+    return Text(snapshot.data()["menuName"].toString() + " " + snapshot.data()["count"].toString() + "개");
   }
 
   @override
   Widget build(BuildContext context)
   {
     return Scaffold(
-      backgroundColor: Colors.yellow[100],
-      appBar: customAppBar_Manag(context,"테이블 목록"),
+      appBar: AppBar(
+        title: Text('테이블 목록'),
+      ),
       body: _buildtables(),
       floatingActionButton: FloatingActionButton(
         onPressed: () async  {
