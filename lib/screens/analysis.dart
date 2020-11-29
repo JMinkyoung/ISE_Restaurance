@@ -14,46 +14,16 @@ class ViewPage extends StatefulWidget {
 
 class _ViewPageState extends State<ViewPage> {
   int rank = 0;
+  int countMenu = 0;
+  int temp = 0;
+  final db = FirebaseFirestore.instance;
 
-  // ignore: non_constant_identifier_names
-  /*  Widget ViewItem(DocumentSnapshot doc) {
-    final vid = doc.data();
-    rank++;
-    return Container(
-      child: Table(
-        children: [
-          TableRow(children: [
-            Text('판매순위:' + rank.toString() + '위',
-                style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black),
-                textAlign: TextAlign.left),
-            Padding(padding: EdgeInsets.all(0.0)),
-            Text('메뉴이름: ${vid['menuName']}\n',
-                style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black),
-                textAlign: TextAlign.left),
-            Padding(padding: EdgeInsets.all(0.0)),
-            Text('${vid['count']}개 판매되었습니다.',
-                style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black),
-                textAlign: TextAlign.left),
-          ])
-        ],
-      ),
-    );
-  } */
-  // ignore: non_constant_identifier_names
   SizedBox ViewItem(DocumentSnapshot doc) {
     final vid = doc.data();
     rank++;
+    count(doc);
     return SizedBox(
-      width: 1300.0,
+      width: 500.0,
       height: 150.0,
       child: Card(
         elevation: 10,
@@ -71,14 +41,14 @@ class _ViewPageState extends State<ViewPage> {
                     color: Colors.black),
               ),
               Text(
-                '메뉴이름: ${vid['menuName']}\n',
+                '메뉴이름: ${vid['MenuName']}\n',
                 style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                     color: Colors.black),
               ),
               Text(
-                '총 ${vid['count']}개 판매되었습니다.',
+                '총 ${vid['Count']}개 판매되었습니다.',
                 style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
@@ -101,8 +71,7 @@ class _ViewPageState extends State<ViewPage> {
             children: <Widget>[
               StreamBuilder<QuerySnapshot>(
                   stream: FirebaseFirestore.instance
-                      .collection('OrderRow')
-                      .orderBy('count', descending: true)
+                      .collection('Menu')
                       .snapshots(),
                   // ignore: missing_return
                   builder: (context, snapshot) {
@@ -119,4 +88,30 @@ class _ViewPageState extends State<ViewPage> {
           ),
         ));
   }
-}
+
+  Future<void> count(DocumentSnapshot doc) async {
+    FirebaseFirestore.instance
+        .collection('OrderRow')
+        .where('menuName', isEqualTo: doc.data()['MenuName'])
+        .get().then((QuerySnapshot ds) {
+      ds.docs.forEach((doc2) => counting(doc2));
+      countMenu = temp;
+      db.collection("Menu").doc(doc.id).update({
+        'MenuName': doc.data()['MenuName'],
+        'MenuPrice': doc.data()['MenuPrice'],
+        'MenuTime': doc.data()['MenuTime'],
+        'MenuType': doc.data()['MenuType'],
+        'Count': '$countMenu',
+      });
+      temp = 0;
+        });
+    }
+
+
+    int counting(DocumentSnapshot doc)
+    {
+      temp += doc.data()['count'];
+    }
+  }
+
+
