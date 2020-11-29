@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:restaurance/OrderScreens/OrderRoute.dart';
 import 'package:restaurance/OrderScreens/TableRoute.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -53,7 +54,10 @@ class _SelectOrderState extends State<SelectOrder> {
             Expanded(
                 child:RaisedButton(
                   onPressed: () {
-                    /*...*/
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => OrderRoute(table: 0)),
+                    );
                   },
                   child: Text(
                     "포장 주문",
