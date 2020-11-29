@@ -236,7 +236,7 @@ class _OrderRouteState extends State<OrderRoute> {
 
                   FirebaseFirestore.instance
                       .collection("Order")
-                      .doc(widget.orderId)
+                      .doc(orderId)
                       .update({
                     'total': total,
                     'wait': wait,
