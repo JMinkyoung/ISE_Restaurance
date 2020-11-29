@@ -53,7 +53,7 @@ class _ViewPageState extends State<ViewPage> {
     final vid = doc.data();
     rank++;
     return SizedBox(
-      width: 500.0,
+      width: 1300.0,
       height: 150.0,
       child: Card(
         elevation: 10,

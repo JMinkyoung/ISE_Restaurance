@@ -14,8 +14,7 @@ class OrderRoute extends StatefulWidget {
   _OrderRouteState createState() => _OrderRouteState();
 }
 
-class _OrderRouteState extends State<OrderRoute>
-{
+class _OrderRouteState extends State<OrderRoute> {
   int _index = 0;
   List<OrderRow> rows;
   List<Menu> menus;
@@ -23,8 +22,8 @@ class _OrderRouteState extends State<OrderRoute>
 
   Future _loadInfos() async {
     if (menus == null) {
-      QuerySnapshot snapshots = await FirebaseFirestore.instance
-          .collection("Menu").get();
+      QuerySnapshot snapshots =
+          await FirebaseFirestore.instance.collection("Menu").get();
 
       cates = new List<String>();
       this.menus = new List<Menu>();
@@ -48,24 +47,22 @@ class _OrderRouteState extends State<OrderRoute>
       if (widget.table > 0) {
         QuerySnapshot snapshots = await FirebaseFirestore.instance
             .collection("OrderRow")
-            .where("orderId", isEqualTo: widget.orderId).get();
+            .where("orderId", isEqualTo: widget.orderId)
+            .get();
 
         for (QueryDocumentSnapshot snapshot in snapshots.docs) {
           String name = snapshot.get("menuName");
           Menu menu;
           for (Menu m in menus) {
-            if (m.name == name)
-              menu = m;
+            if (m.name == name) menu = m;
           }
-          if (menu != null)
-            rows.add(OrderRow(menu, snapshot.get('count')));
+          if (menu != null) rows.add(OrderRow(menu, snapshot.get('count')));
         }
       }
     }
   }
 
-  Widget _buildRow(OrderRow row)
-  {
+  Widget _buildRow(OrderRow row) {
     return Card(
       child: ListTile(
         title: Row(
@@ -123,14 +120,12 @@ class _OrderRouteState extends State<OrderRoute>
     );
   }
 
-  Widget _buildMenuSelector()
-  {
+  Widget _buildMenuSelector() {
     List<List<Menu>> menus = new List<List<Menu>>();
     for (String cate in this.cates) {
       menus.add(new List<Menu>());
       for (Menu menu in this.menus) {
-        if (menu.category == cate)
-          menus.last.add(menu);
+        if (menu.category == cate) menus.last.add(menu);
       }
     }
 
@@ -146,16 +141,18 @@ class _OrderRouteState extends State<OrderRoute>
         ),
         IndexedStack(
           index: _index,
-          children: menus.map((ele) => SizedBox(
-            height: 400,
-            width: 600,
-            child: ListView(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              padding:EdgeInsets.only(top: 20.0),
-              children: ele.map((e) => _buildMenu(e)).toList(),
-            ),
-          )).toList(),
+          children: menus
+              .map((ele) => SizedBox(
+                    height: 400,
+                    width: 600,
+                    child: ListView(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      padding: EdgeInsets.only(top: 20.0),
+                      children: ele.map((e) => _buildMenu(e)).toList(),
+                    ),
+                  ))
+              .toList(),
         ),
       ],
     );
@@ -178,10 +175,8 @@ class _OrderRouteState extends State<OrderRoute>
         ),
         onTap: () {
           int index = -1;
-          for (int i = 0; i < rows.length; ++i)
-          {
-            if (rows[i].menu.name == menu.name)
-            {
+          for (int i = 0; i < rows.length; ++i) {
+            if (rows[i].menu.name == menu.name) {
               index = i;
               break;
             }
@@ -211,14 +206,17 @@ class _OrderRouteState extends State<OrderRoute>
                 onPressed: () async {
                   String orderId = widget.orderId;
                   if (widget.table == 0) {
-                    orderId = (await FirebaseFirestore.instance.collection("Order").add(
-                        { 'tableNum': 0, 'start': DateTime.now() }
-                    )).id;
+                    orderId = (await FirebaseFirestore.instance
+                            .collection("Order")
+                            .add({'tableNum': 0, 'start': DateTime.now()}))
+                        .id;
                   }
 
-                  FirebaseFirestore.instance.collection("OrderRow")
+                  FirebaseFirestore.instance
+                      .collection("OrderRow")
                       .where("orderId", isEqualTo: widget.orderId)
-                      .get().then((snapshot) {
+                      .get()
+                      .then((snapshot) {
                     for (DocumentSnapshot ds in snapshot.docs) {
                       ds.reference.delete();
                     }
@@ -229,12 +227,23 @@ class _OrderRouteState extends State<OrderRoute>
                   for (var row in rows) {
                     total += row.menu.price;
                     wait = row.menu.time > wait ? row.menu.time : wait;
-                    FirebaseFirestore.instance.collection('OrderRow').add(
-                        { 'orderId': widget.orderId, 'menuName': row.menu.name, 'count': row.count }
-                    );
+                    FirebaseFirestore.instance.collection('OrderRow').add({
+                      'orderId': widget.orderId,
+                      'menuName': row.menu.name,
+                      'count': row.count
+                    });
                   }
 
-                  FirebaseFirestore.instance.collection("Order").doc(widget.orderId).update({'total': total, 'wait': wait, 'completed': true, 'end': DateTime.now(), 'useremail': FirebaseAuth.instance.currentUser.email});
+                  FirebaseFirestore.instance
+                      .collection("Order")
+                      .doc(widget.orderId)
+                      .update({
+                    'total': total,
+                    'wait': wait,
+                    'completed': true,
+                    'end': DateTime.now(),
+                    'useremail': FirebaseAuth.instance.currentUser.email
+                  });
 
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
@@ -251,7 +260,7 @@ class _OrderRouteState extends State<OrderRoute>
   Widget _buildListButtonsRow() {
     if (widget.table > 0) {
       return Row(
-        children:[
+        children: [
           RaisedButton(
             onPressed: () {
               Navigator.of(context).pop();
@@ -260,15 +269,20 @@ class _OrderRouteState extends State<OrderRoute>
           ),
           RaisedButton(
             onPressed: () {
-              FirebaseFirestore.instance.collection("OrderRow")
+              FirebaseFirestore.instance
+                  .collection("OrderRow")
                   .where("orderId", isEqualTo: widget.orderId)
-                  .get().then((snapshot) {
+                  .get()
+                  .then((snapshot) {
                 for (DocumentSnapshot ds in snapshot.docs) {
                   ds.reference.delete();
                 }
               });
 
-              FirebaseFirestore.instance.collection("Order").doc(widget.orderId).delete();
+              FirebaseFirestore.instance
+                  .collection("Order")
+                  .doc(widget.orderId)
+                  .delete();
 
               Navigator.of(context).pop();
             },
@@ -276,9 +290,11 @@ class _OrderRouteState extends State<OrderRoute>
           ),
           RaisedButton(
             onPressed: () {
-              FirebaseFirestore.instance.collection("OrderRow")
+              FirebaseFirestore.instance
+                  .collection("OrderRow")
                   .where("orderId", isEqualTo: widget.orderId)
-                  .get().then((snapshot) {
+                  .get()
+                  .then((snapshot) {
                 for (DocumentSnapshot ds in snapshot.docs) {
                   ds.reference.delete();
                 }
@@ -289,12 +305,17 @@ class _OrderRouteState extends State<OrderRoute>
               for (var row in rows) {
                 total += row.menu.price;
                 wait = row.menu.time > wait ? row.menu.time : wait;
-                FirebaseFirestore.instance.collection('OrderRow').add(
-                    { 'orderId': widget.orderId, 'menuName': row.menu.name, 'count': row.count }
-                );
+                FirebaseFirestore.instance.collection('OrderRow').add({
+                  'orderId': widget.orderId,
+                  'menuName': row.menu.name,
+                  'count': row.count
+                });
               }
 
-              FirebaseFirestore.instance.collection("Order").doc(widget.orderId).update({'total': total, 'wait': wait});
+              FirebaseFirestore.instance
+                  .collection("Order")
+                  .doc(widget.orderId)
+                  .update({'total': total, 'wait': wait});
 
               Navigator.of(context).pop();
             },
@@ -329,11 +350,9 @@ class _OrderRouteState extends State<OrderRoute>
   }
 
   @override
-  Widget build(BuildContext context)
-  {
+  Widget build(BuildContext context) {
     String titleText = widget.table.toString() + "번 테이블 주문 수정";
-    if (widget.table == 0)
-      titleText = "포장 주문";
+    if (widget.table == 0) titleText = "포장 주문";
     return Scaffold(
       appBar: AppBar(
         title: Text(titleText),
@@ -359,7 +378,7 @@ class _OrderRouteState extends State<OrderRoute>
                       child: ListView(
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
-                        padding:EdgeInsets.only(top: 20.0),
+                        padding: EdgeInsets.only(top: 20.0),
                         children: rows.map((e) => _buildRow(e)).toList(),
                       ),
                     ),
