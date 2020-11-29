@@ -65,6 +65,7 @@ class SignInPage extends StatelessWidget {
                         context.read<AuthenticationService>().signIn(
                           email: _emailController.text.trim(),
                           password: _passwordController.text.trim(),
+                          context: context,
                         );
                       },
                       textColor: Colors.brown[800],
