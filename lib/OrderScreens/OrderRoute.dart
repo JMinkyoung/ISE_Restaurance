@@ -392,6 +392,7 @@ class _OrderRouteState extends State<OrderRoute> {
     String titleText = widget.table.toString() + "번 테이블 주문 수정";
     if (widget.table == 0) titleText = "포장 주문";
     return Scaffold(
+      backgroundColor: Colors.yellow[100],
       appBar: AppBar(
         title: Text(titleText),
       ),
