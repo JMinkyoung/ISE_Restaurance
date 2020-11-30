@@ -175,10 +175,7 @@ class _checkTimeState extends State<checkTime> {
                   color: Colors.black,
                 ),
               ),
-              Text(
-                  priceshow != null
-                      ? numberWithComma(int.parse(priceshow)) + '￦'
-                      : 'No Order',
+              Text(priceshow != null ? priceshow + '￦' : 'No Order',
                   style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,

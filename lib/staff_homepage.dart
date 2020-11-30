@@ -14,7 +14,7 @@ class StaffHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.yellow[100],
-      appBar: customAppBar_Manag(context,""),
+      appBar: customAppBar_Staff(context, ""),
       body: Stack(children: [
         Positioned(
           top: 40,
@@ -33,7 +33,10 @@ class StaffHomePage extends StatelessWidget {
             children: [
               RaisedButton(
                 onPressed: () {
-                  Navigator.push(context,MaterialPageRoute(builder: (context) => SelectOrderType()),);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SelectOrderType()),
+                  );
                 },
                 elevation: 10,
                 textColor: Colors.white,
@@ -63,7 +66,10 @@ class StaffHomePage extends StatelessWidget {
               const SizedBox(width: 45.0),
               RaisedButton(
                 onPressed: () {
-                  Navigator.push(context,MaterialPageRoute(builder: (context) => checkTime()),);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => EditPage()),
+                  );
                 },
                 elevation: 10,
                 textColor: Colors.white,
@@ -116,7 +122,7 @@ class StaffHomePage extends StatelessWidget {
       ]),
     );
 
-      Scaffold(
+    Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -124,13 +130,19 @@ class StaffHomePage extends StatelessWidget {
             Text("Staff HOME"),
             RaisedButton(
               onPressed: () {
-                Navigator.push(context,MaterialPageRoute(builder: (context) => EditPage()),);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => EditPage()),
+                );
               },
               child: Text("check Time"),
             ),
             RaisedButton(
               onPressed: () {
-                Navigator.push(context,MaterialPageRoute(builder: (context) => SelectOrderType()),);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SelectOrderType()),
+                );
               },
               child: Text("SelectOrderType"),
             ),

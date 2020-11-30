@@ -25,7 +25,7 @@ class _EditPageState extends State<EditPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.yellow[100],
-      appBar: customAppBar_Manag(context, "소요시간 및 준비시간"),
+      appBar: customAppBar_Staff(context, "소요시간 및 준비시간"),
       body: Padding(
         padding: EdgeInsets.all(20),
         child: Column(
