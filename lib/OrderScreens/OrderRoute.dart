@@ -404,10 +404,10 @@ class _OrderRouteState extends State<OrderRoute> {
   @override
   Widget build(BuildContext context) {
     String titleText = widget.table.toString() + "번 테이블 주문 수정";
-    if (widget.table == 0) titleText = "포장 주문";
+    if (widget.table == 0) titleText = "테이블 주문";
     return Scaffold(
       backgroundColor: Colors.yellow[100],
-      appBar: customAppBar_Staff(context, "포장 주문"),
+      appBar: customAppBar_Staff(context, "테이블 주문"),
       body: FutureBuilder(
         future: _loadInfos(),
         builder: (context, snapshot) {
