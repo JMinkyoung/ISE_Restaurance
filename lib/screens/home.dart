@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 import 'package:restaurance/customAppBar.dart';
 import 'edit.dart';
 
@@ -66,7 +67,7 @@ class _checkTimeState extends State<checkTime> {
                         color: Colors.black,
                       ),
                     ),
-                    Text('${id['total']}￦  ',
+                    Text(numberWithComma(id['total'])+'￦  ',
                         style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -92,11 +93,9 @@ class _checkTimeState extends State<checkTime> {
     else{
       return Card();
     }
-
   }
 
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Colors.yellow[100],
       appBar: customAppBar_Manag(context, "소요시간 및 준비시간"),
@@ -182,7 +181,7 @@ class _checkTimeState extends State<checkTime> {
                   color: Colors.black,
                 ),
               ),
-              Text(priceshow!=null?priceshow+'￦':'No Order',
+              Text(priceshow!=null?numberWithComma(int.parse(priceshow))+'￦':'No Order',
                   style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -233,6 +232,10 @@ class _checkTimeState extends State<checkTime> {
       count++;
     }
   }
+}
+
+String numberWithComma(int param){
+  return new NumberFormat('###,###,###,###').format(param).replaceAll(' ', '');
 }
 
 
