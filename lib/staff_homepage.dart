@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:restaurance/screens/home.dart';
 import 'package:restaurance/OrderScreens/SelectOrderType.dart';
 import 'package:restaurance/customAppBar.dart';
+import 'package:restaurance/screens/edit.dart';
 
 class StaffHomePage extends StatelessWidget {
   static const double buttonHeight = 400;
@@ -123,7 +124,7 @@ class StaffHomePage extends StatelessWidget {
             Text("Staff HOME"),
             RaisedButton(
               onPressed: () {
-                Navigator.push(context,MaterialPageRoute(builder: (context) => checkTime()),);
+                Navigator.push(context,MaterialPageRoute(builder: (context) => EditPage()),);
               },
               child: Text("check Time"),
             ),
