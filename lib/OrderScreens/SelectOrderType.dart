@@ -15,7 +15,7 @@ class SelectOrderType extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.yellow[100],
-      appBar: customAppBar_Manag(context,""),
+      appBar: customAppBar_Manag(context, ""),
       body: Stack(children: [
         Positioned(
           top: 40,
@@ -36,7 +36,8 @@ class SelectOrderType extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => OrderRoute(table: 0)),
+                    MaterialPageRoute(
+                        builder: (context) => OrderRoute(table: 0)),
                   );
                 },
                 textColor: Colors.white,

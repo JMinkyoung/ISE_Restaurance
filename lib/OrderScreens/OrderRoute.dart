@@ -388,12 +388,14 @@ class _OrderRouteState extends State<OrderRoute> {
             onPressed: () {
               Navigator.of(context).pop();
             },
+            color: Color(0xFFFFD180),
             child: Text("주문 취소"),
           ),
           RaisedButton(
             onPressed: () {
               _pushPaymentRoute();
             },
+            color: Color(0xFFFFD180),
             child: Text("주문 결제"),
           ),
         ],
@@ -407,7 +409,7 @@ class _OrderRouteState extends State<OrderRoute> {
     if (widget.table == 0) titleText = "테이블 주문";
     return Scaffold(
       backgroundColor: Colors.yellow[100],
-      appBar: customAppBar_Staff(context, "테이블 주문"),
+      appBar: customAppBar_Staff(context, "주문 목록"),
       body: FutureBuilder(
         future: _loadInfos(),
         builder: (context, snapshot) {

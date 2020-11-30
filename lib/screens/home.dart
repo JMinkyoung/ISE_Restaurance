@@ -175,19 +175,28 @@ class _checkTimeState extends State<checkTime> {
                   color: Colors.black,
                 ),
               ),
-               Text((priceshow != null && priceshow != 'NaN')?priceshow+'￦':' ',
+              Text(
+                  (priceshow != null && priceshow != 'NaN')
+                      ? priceshow + '￦'
+                      : ' ',
                   style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: Colors.black),
                   textAlign: TextAlign.right),
-              Text((timeshow1 != null && timeshow1 != 'NaN')?timeshow1+'분':' ',
+              Text(
+                  (timeshow1 != null && timeshow1 != 'NaN')
+                      ? timeshow1 + '분'
+                      : ' ',
                   style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: Colors.black),
                   textAlign: TextAlign.right),
-              Text((timeshow2 != null && timeshow2 != 'NaN')?timeshow2+'분':' ',
+              Text(
+                  (timeshow2 != null && timeshow2 != 'NaN')
+                      ? timeshow2 + '분'
+                      : ' ',
                   style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,

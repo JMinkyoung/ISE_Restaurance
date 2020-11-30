@@ -31,9 +31,7 @@ Widget customAppBar_Manag(context, String name) {
       ),
       Text(
         name,
-        style: TextStyle(
-            color: Colors.brown[800],
-            fontSize: 20.0),
+        style: TextStyle(color: Colors.brown[800], fontSize: 20.0),
       ),
     ]),
   );
