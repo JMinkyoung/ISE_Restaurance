@@ -62,12 +62,17 @@ class _EditPageState extends State<EditPage> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Navigator.push(
-              context, CupertinoPageRoute(builder: (context) => checkTime(month:this.month,day: this.day)));
+              context,
+              CupertinoPageRoute(
+                  builder: (context) =>
+                      checkTime(month: this.month, day: this.day)));
         },
         backgroundColor: Colors.yellow[200],
         tooltip: '검색하기',
-        label: Text('Search', style: TextStyle(fontSize: 25, color:Colors.black) ),
-        icon: Icon(Icons.search, color:Colors.black),
+        label:
+            Text('Search', style: TextStyle(fontSize: 25, color: Colors.black)),
+        icon: Icon(Icons.search, color: Colors.black),
       ),
     );
   }
+}

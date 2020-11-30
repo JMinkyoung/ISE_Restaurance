@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:restaurance/OrderScreens/Order.dart';
 import 'package:restaurance/OrderScreens/Menu.dart';
+import 'package:restaurance/customAppBar.dart';
 
 class OrderRoute extends StatefulWidget {
   OrderRoute({Key key, this.table, this.orderId}) : super(key: key);
@@ -135,7 +136,9 @@ class _OrderRouteState extends State<OrderRoute> {
 
     return Column(
       children: [
-        SizedBox(height: 25,),
+        SizedBox(
+          height: 25,
+        ),
         Material(
           elevation: 5,
           child: Container(
@@ -161,7 +164,9 @@ class _OrderRouteState extends State<OrderRoute> {
             ),
           ),
         ),
-        SizedBox(height: 15,),
+        SizedBox(
+          height: 15,
+        ),
         Center(
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -297,9 +302,14 @@ class _OrderRouteState extends State<OrderRoute> {
               Navigator.of(context).pop();
             },
             color: Color(0xFFFFD180),
-            child: Text("변경 취소", style: TextStyle(fontWeight: FontWeight.bold),),
+            child: Text(
+              "변경 취소",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
-          SizedBox(width: 10,),
+          SizedBox(
+            width: 10,
+          ),
           RaisedButton(
             onPressed: () {
               FirebaseFirestore.instance
@@ -320,9 +330,11 @@ class _OrderRouteState extends State<OrderRoute> {
               Navigator.of(context).pop();
             },
             color: Color(0xFFFFD180),
-            child: Text("주문 제거",style: TextStyle(fontWeight: FontWeight.bold)),
+            child: Text("주문 제거", style: TextStyle(fontWeight: FontWeight.bold)),
           ),
-          SizedBox(width: 10,),
+          SizedBox(
+            width: 10,
+          ),
           RaisedButton(
             onPressed: () {
               FirebaseFirestore.instance
@@ -355,15 +367,17 @@ class _OrderRouteState extends State<OrderRoute> {
               Navigator.of(context).pop();
             },
             color: Color(0xFFFFD180),
-            child: Text("주문 저장",style: TextStyle(fontWeight: FontWeight.bold)),
+            child: Text("주문 저장", style: TextStyle(fontWeight: FontWeight.bold)),
           ),
-          SizedBox(width: 10,),
+          SizedBox(
+            width: 10,
+          ),
           RaisedButton(
             onPressed: () {
               _pushPaymentRoute();
             },
             color: Color(0xFFFFD180),
-            child: Text("주문 결제",style: TextStyle(fontWeight: FontWeight.bold)),
+            child: Text("주문 결제", style: TextStyle(fontWeight: FontWeight.bold)),
           ),
         ],
       );
@@ -393,9 +407,7 @@ class _OrderRouteState extends State<OrderRoute> {
     if (widget.table == 0) titleText = "포장 주문";
     return Scaffold(
       backgroundColor: Colors.yellow[100],
-      appBar: AppBar(
-        title: Text(titleText),
-      ),
+      appBar: customAppBar_Staff(context, "포장 주문"),
       body: FutureBuilder(
         future: _loadInfos(),
         builder: (context, snapshot) {
@@ -414,7 +426,9 @@ class _OrderRouteState extends State<OrderRoute> {
                 ),
                 Column(
                   children: [
-                    SizedBox(height: 25,),
+                    SizedBox(
+                      height: 25,
+                    ),
                     Material(
                       elevation: 5,
                       child: Container(
@@ -433,9 +447,9 @@ class _OrderRouteState extends State<OrderRoute> {
                           child: Center(
                             child: Text('주문상품 목록',
                                 style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.brown)),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.brown)),
                           ),
                         ),
                       ),
@@ -454,8 +468,8 @@ class _OrderRouteState extends State<OrderRoute> {
                       child: Align(
                         alignment: FractionalOffset.bottomCenter,
                         child: Padding(
-                            padding: EdgeInsets.only(bottom: 10.0),
-                            child: _buildListButtonsRow(), //Your widget here,
+                          padding: EdgeInsets.only(bottom: 10.0),
+                          child: _buildListButtonsRow(), //Your widget here,
                         ),
                       ),
                     ),

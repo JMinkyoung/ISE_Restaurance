@@ -16,9 +16,11 @@ class _TableRouteState extends State<TableRoute> {
     return StreamBuilder(
       stream: FirebaseFirestore.instance
           .collection("Order")
-          .where("completed", isEqualTo: false).where("tableNum", isGreaterThan: 0).snapshots(),
-      builder: (context, snapshot){
-        if(!snapshot.hasData){
+          .where("completed", isEqualTo: false)
+          .where("tableNum", isGreaterThan: 0)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
           return Center(
             child: Text("주문이 진행중인 테이블이 없습니다."),
           );
@@ -29,15 +31,16 @@ class _TableRouteState extends State<TableRoute> {
           padding: const EdgeInsets.all(12.0),
           child: ListView(
             padding: EdgeInsets.all(8),
-            children: documents.map((eachDocument) => _buildRow(eachDocument)).toList(),
+            children: documents
+                .map((eachDocument) => _buildRow(eachDocument))
+                .toList(),
           ),
         );
       },
     );
   }
 
-  Widget _buildRow(DocumentSnapshot snapshot)
-  {
+  Widget _buildRow(DocumentSnapshot snapshot) {
     return Card(
       elevation: 10,
       color: Color(0xfffbffde),
@@ -61,14 +64,17 @@ class _TableRouteState extends State<TableRoute> {
                 child: StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection("OrderRow")
-                      .where("orderId", isEqualTo: snapshot.id).snapshots(),
-                  builder: (context, snapshot){
-                    if(!snapshot.hasData){
+                      .where("orderId", isEqualTo: snapshot.id)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
                       return Text("");
                     }
                     List<DocumentSnapshot> documents = snapshot.data.documents;
                     return Column(
-                      children: documents.map((eachDocument) => _buildOrderRow(eachDocument)).toList(),
+                      children: documents
+                          .map((eachDocument) => _buildOrderRow(eachDocument))
+                          .toList(),
                     );
                   },
                 ),
@@ -80,14 +86,18 @@ class _TableRouteState extends State<TableRoute> {
                   style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black),),
+                      color: Colors.black),
+                ),
               ),
             ],
           ),
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => OrderRoute(table: snapshot.data()["tableNum"], orderId: snapshot.id)),
+              MaterialPageRoute(
+                  builder: (context) => OrderRoute(
+                      table: snapshot.data()["tableNum"],
+                      orderId: snapshot.id)),
             );
           },
         ),
@@ -95,36 +105,35 @@ class _TableRouteState extends State<TableRoute> {
     );
   }
 
-  Widget _buildOrderRow(DocumentSnapshot snapshot)
-  {
+  Widget _buildOrderRow(DocumentSnapshot snapshot) {
     return Text(
-      snapshot.data()["menuName"].toString() + " " + snapshot.data()["count"].toString() + "개",
+      snapshot.data()["menuName"].toString() +
+          " " +
+          snapshot.data()["count"].toString() +
+          "개",
       style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          color: Colors.black),
+          fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
     );
   }
 
   @override
-  Widget build(BuildContext context)
-  {
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.yellow[100],
-      appBar: customAppBar_Manag(context,"테이블 목록"),
+      appBar: customAppBar_Staff(context, "테이블 목록"),
       body: _buildtables(),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async  {
+        onPressed: () async {
           var data = new List<String>();
-          for (int i = 1; i < 21; ++i)
-            data.add(i.toString());
+          for (int i = 1; i < 21; ++i) data.add(i.toString());
 
           QuerySnapshot snapshots = await FirebaseFirestore.instance
               .collection("Order")
-              .where("completed", isEqualTo: false).where("tableNum", isGreaterThan: 0).get();
+              .where("completed", isEqualTo: false)
+              .where("tableNum", isGreaterThan: 0)
+              .get();
 
-          for (QueryDocumentSnapshot snapshot in snapshots.docs)
-          {
+          for (QueryDocumentSnapshot snapshot in snapshots.docs) {
             if (data.contains(snapshot.data()["tableNum"].toString()))
               data.remove(snapshot.data()["tableNum"].toString());
           }
@@ -134,9 +143,13 @@ class _TableRouteState extends State<TableRoute> {
             title: "주문을 추가할 테이블을 선택하세요",
             items: data,
             onChanged: (selected) {
-              FirebaseFirestore.instance.collection("Order").add(
-                  { 'completed': false, 'tableNum': int.parse(selected.toString()), 'start': DateTime.now(), 'total': 0, 'wait': 0 }
-              );
+              FirebaseFirestore.instance.collection("Order").add({
+                'completed': false,
+                'tableNum': int.parse(selected.toString()),
+                'start': DateTime.now(),
+                'total': 0,
+                'wait': 0
+              });
             },
           );
         },

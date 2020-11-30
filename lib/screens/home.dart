@@ -29,28 +29,21 @@ class _checkTimeState extends State<checkTime> {
   int count = 0;
   int c = 0;
 
-
   @override
   Card buildItem(DocumentSnapshot doc) {
-
     final id = doc.data();
 
     Timestamp a = id['start'];
     Timestamp b = id['end'];
-    temp1 = a
-        .toDate()
-        .month;
-    temp2 = a
-        .toDate()
-        .day;
+    temp1 = a.toDate().month;
+    temp2 = a.toDate().day;
     if (b != null) {
       c = b.seconds - a.seconds;
-    }
-    else {
+    } else {
       c = 0;
     }
 
-    if(temp1 == widget.month&&temp2 == widget.day) {
+    if (temp1 == widget.month && temp2 == widget.day) {
       return Card(
           elevation: 10,
           color: Color(0xfffbffde),
@@ -67,7 +60,7 @@ class _checkTimeState extends State<checkTime> {
                         color: Colors.black,
                       ),
                     ),
-                    Text(numberWithComma(id['total'])+'￦  ',
+                    Text(numberWithComma(id['total']) + '￦  ',
                         style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -89,8 +82,7 @@ class _checkTimeState extends State<checkTime> {
                   ],
                 ),
               ])));
-    }
-    else{
+    } else {
       return Card();
     }
   }
@@ -98,13 +90,17 @@ class _checkTimeState extends State<checkTime> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.yellow[100],
-      appBar: customAppBar_Manag(context, "소요시간 및 준비시간"),
+      appBar: customAppBar_Staff(context, "소요시간 및 준비시간"),
       body: ListView(
         physics: BouncingScrollPhysics(),
         padding: EdgeInsets.all(10),
         children: <Widget>[
-          Text(widget.month.toString()+'월'+widget.day.toString()+'일의 판매내역',
-          style : TextStyle(fontSize:24,fontWeight: FontWeight.bold, color: Colors.black)),
+          Text(
+              widget.month.toString() + '월' + widget.day.toString() + '일의 판매내역',
+              style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black)),
           Padding(padding: EdgeInsets.all(5.0)),
           Table(children: [
             TableRow(children: [
@@ -142,26 +138,24 @@ class _checkTimeState extends State<checkTime> {
               // ignore: missing_return
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-
-      FirebaseFirestore.instance
-          .collection('Order')
-          .get().then((QuerySnapshot ds) {
-        useTime = 0;
-        readyTime = 0;
-        count = 0;
-        ds.docs.forEach((doc) => avgmaker(doc));
-        setState(() {
-          timeshow1 = (useTime / (count * 60)).toStringAsFixed(0);
-          timeshow2 = (readyTime / count).toStringAsFixed(0);
-          priceshow = (totalprice / count).toStringAsFixed(0);
-        });
-        useTime = 0;
-        readyTime = 0;
-        totalprice = 0;
-        count = 0;
-      }
-      );
-
+                  FirebaseFirestore.instance
+                      .collection('Order')
+                      .get()
+                      .then((QuerySnapshot ds) {
+                    useTime = 0;
+                    readyTime = 0;
+                    count = 0;
+                    ds.docs.forEach((doc) => avgmaker(doc));
+                    setState(() {
+                      timeshow1 = (useTime / (count * 60)).toStringAsFixed(0);
+                      timeshow2 = (readyTime / count).toStringAsFixed(0);
+                      priceshow = (totalprice / count).toStringAsFixed(0);
+                    });
+                    useTime = 0;
+                    readyTime = 0;
+                    totalprice = 0;
+                    count = 0;
+                  });
 
                   return Column(
                       children: snapshot.data.docs
@@ -181,48 +175,44 @@ class _checkTimeState extends State<checkTime> {
                   color: Colors.black,
                 ),
               ),
-              Text(priceshow!=null?numberWithComma(int.parse(priceshow))+'￦':'No Order',
+              Text(
+                  priceshow != null
+                      ? numberWithComma(int.parse(priceshow)) + '￦'
+                      : 'No Order',
                   style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: Colors.black),
                   textAlign: TextAlign.right),
-              Text(timeshow1!=null?timeshow1+'분':'No Order',
+              Text(timeshow1 != null ? timeshow1 + '분' : 'No Order',
                   style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: Colors.black),
                   textAlign: TextAlign.right),
-              Text(timeshow2!=null?timeshow2+'분':'No Order',
+              Text(timeshow2 != null ? timeshow2 + '분' : 'No Order',
                   style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: Colors.black),
                   textAlign: TextAlign.right),
               Padding(padding: EdgeInsets.all(0.0)),
-
             ])
           ]),
         ],
       ),
     );
-
   }
 
   void avgmaker(DocumentSnapshot doc) async {
     Timestamp a = doc.data()['start'];
-    temp1 = a
-        .toDate()
-        .month;
-    temp2 = a
-        .toDate()
-        .day;
+    temp1 = a.toDate().month;
+    temp2 = a.toDate().day;
     Timestamp b = doc.data()['end'];
     int d = doc.data()['total'];
     if (b != null) {
       c = b.seconds - a.seconds;
-    }
-    else {
+    } else {
       c = 0;
     }
     if (temp1 == widget.month && temp2 == widget.day) {
@@ -234,9 +224,6 @@ class _checkTimeState extends State<checkTime> {
   }
 }
 
-String numberWithComma(int param){
+String numberWithComma(int param) {
   return new NumberFormat('###,###,###,###').format(param).replaceAll(' ', '');
 }
-
-
-
