@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:restaurance/customAppBar.dart';
 import 'edit.dart';
 
 class checkTime extends StatefulWidget {
@@ -16,38 +17,42 @@ class checkTime extends StatefulWidget {
 class _checkTimeState extends State<checkTime> {
   final db = FirebaseFirestore.instance;
   String ident;
+  String timeshow1;
+  String timeshow2;
+  String priceshow;
   int temp1 = 0;
   int temp2 = 0;
   int useTime = 0;
   int readyTime = 0;
+  int totalprice = 0;
   int count = 0;
+  int c = 0;
 
 
   @override
   Card buildItem(DocumentSnapshot doc) {
-    int c = 0;
+
     final id = doc.data();
 
     Timestamp a = id['start'];
     Timestamp b = id['end'];
-    temp1 = a.toDate()
+    temp1 = a
+        .toDate()
         .month;
-    temp2 = a.toDate()
+    temp2 = a
+        .toDate()
         .day;
     if (b != null) {
-      print(a);
-      print(b);
       c = b.seconds - a.seconds;
-      print(c / 60);
+    }
+    else {
+      c = 0;
     }
 
-    useTime += c;
-    readyTime += id['wait'];
-
-    count++;
-
+    if(temp1 == widget.month&&temp2 == widget.day) {
       return Card(
-          color: Colors.white,
+          elevation: 10,
+          color: Color(0xfffbffde),
           child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: Table(children: [
@@ -83,15 +88,25 @@ class _checkTimeState extends State<checkTime> {
                   ],
                 ),
               ])));
+    }
+    else{
+      return Card();
+    }
 
   }
 
   Widget build(BuildContext context) {
+
     return Scaffold(
+      backgroundColor: Colors.yellow[100],
+      appBar: customAppBar_Manag(context, "소요시간 및 준비시간"),
       body: ListView(
         physics: BouncingScrollPhysics(),
         padding: EdgeInsets.all(10),
         children: <Widget>[
+          Text(widget.month.toString()+'월'+widget.day.toString()+'일의 판매내역',
+          style : TextStyle(fontSize:24,fontWeight: FontWeight.bold, color: Colors.black)),
+          Padding(padding: EdgeInsets.all(5.0)),
           Table(children: [
             TableRow(children: [
               Text(
@@ -102,7 +117,7 @@ class _checkTimeState extends State<checkTime> {
                   color: Colors.black,
                 ),
               ),
-              Text('예상금액',
+              Text('결제금액',
                   style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -128,6 +143,27 @@ class _checkTimeState extends State<checkTime> {
               // ignore: missing_return
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
+
+      FirebaseFirestore.instance
+          .collection('Order')
+          .get().then((QuerySnapshot ds) {
+        useTime = 0;
+        readyTime = 0;
+        count = 0;
+        ds.docs.forEach((doc) => avgmaker(doc));
+        setState(() {
+          timeshow1 = (useTime / (count * 60)).toStringAsFixed(0);
+          timeshow2 = (readyTime / count).toStringAsFixed(0);
+          priceshow = (totalprice / count).toStringAsFixed(0);
+        });
+        useTime = 0;
+        readyTime = 0;
+        totalprice = 0;
+        count = 0;
+      }
+      );
+
+
                   return Column(
                       children: snapshot.data.docs
                           .map((doc) => buildItem(doc))
@@ -146,37 +182,58 @@ class _checkTimeState extends State<checkTime> {
                   color: Colors.black,
                 ),
               ),
-              Text(''),
-              Text((useTime / (60*count)).toStringAsFixed(0) + '분',
+              Text(priceshow!=null?priceshow+'￦':'No Order',
                   style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: Colors.black),
                   textAlign: TextAlign.right),
-              Text((readyTime / count).toStringAsFixed(0) + '분',
+              Text(timeshow1!=null?timeshow1+'분':'No Order',
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
+                  textAlign: TextAlign.right),
+              Text(timeshow2!=null?timeshow2+'분':'No Order',
                   style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: Colors.black),
                   textAlign: TextAlign.right),
               Padding(padding: EdgeInsets.all(0.0)),
+
             ])
           ]),
         ],
       ),
-
-      appBar: AppBar(),
-
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.push(
-              context, CupertinoPageRoute(builder: (context) => EditPage()));
-        },
-        backgroundColor: Colors.deepPurple,
-        tooltip: '추가하려면 클릭',
-        label: Text('ADD', style: TextStyle(fontSize: 25)),
-        icon: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+
+  }
+
+  void avgmaker(DocumentSnapshot doc) async {
+    Timestamp a = doc.data()['start'];
+    temp1 = a
+        .toDate()
+        .month;
+    temp2 = a
+        .toDate()
+        .day;
+    Timestamp b = doc.data()['end'];
+    int d = doc.data()['total'];
+    if (b != null) {
+      c = b.seconds - a.seconds;
+    }
+    else {
+      c = 0;
+    }
+    if (temp1 == widget.month && temp2 == widget.day) {
+      totalprice += d;
+      useTime += c;
+      readyTime += doc.data()['wait'];
+      count++;
+    }
   }
 }
+
+
+
