@@ -248,15 +248,17 @@ class _OrderRouteState extends State<OrderRoute> {
                         .id;
                   }
 
-                  FirebaseFirestore.instance
-                      .collection("OrderRow")
-                      .where("orderId", isEqualTo: widget.orderId)
-                      .get()
-                      .then((snapshot) {
-                    for (DocumentSnapshot ds in snapshot.docs) {
-                      ds.reference.delete();
-                    }
-                  });
+                  if (widget.table > 0) {
+                    FirebaseFirestore.instance
+                        .collection("OrderRow")
+                        .where("orderId", isEqualTo: widget.orderId)
+                        .get()
+                        .then((snapshot) {
+                      for (DocumentSnapshot ds in snapshot.docs) {
+                        ds.reference.delete();
+                      }
+                    });
+                  }
 
                   int total = 0;
                   int wait = 0;
